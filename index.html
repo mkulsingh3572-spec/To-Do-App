@@ -60,16 +60,24 @@
 
             <div class="input-section">
 
-                <input
-                    type="text"
-                    id="taskInput"
-                    placeholder="Enter a new task...">
+    <input
+        type="text"
+        id="taskInput"
+        placeholder="Enter a new task...">
 
-                <button id="addTask" title="Add Task">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+    <select id="priority">
 
-            </div>
+        <option value="High">🔴 HIGH</option>
+<option value="Medium" selected>🟡 MEDIUM</option>
+<option value="Low">🟢 LOW</option>
+
+    </select>
+
+    <button id="addTask" title="Add Task">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+</div>
 
 
             <!-- Search -->

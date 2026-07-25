@@ -5,6 +5,7 @@
 
 // Elements
 const taskInput = document.getElementById("taskInput");
+const priority = document.getElementById("priority");
 const addTaskBtn = document.getElementById("addTask");
 const taskList = document.getElementById("taskList");
 const taskCount = document.getElementById("taskCount");
@@ -62,9 +63,19 @@ function renderTasks(filter = "") {
         searchSection.style.display = "block";
     }
 
-    const filteredTasks = tasks.filter(task =>
+    const priorityOrder = {
+    High: 1,
+    Medium: 2,
+    Low: 3
+};
+
+const filteredTasks = tasks
+    .filter(task =>
         task.text.toLowerCase().includes(filter.toLowerCase())
-    );
+    )
+    .sort((a, b) => {
+        return priorityOrder[a.priority || "Medium"] - priorityOrder[b.priority || "Medium"];
+    });
 
     filteredTasks.forEach(task => {
 
@@ -78,7 +89,21 @@ function renderTasks(filter = "") {
         }
 
         li.innerHTML = `
-    <span>${task.text}</span>
+    <div class="task-content">
+
+        <span>${task.text}</span>
+
+        <div class="priority ${(task.priority || "Medium").toLowerCase()}">
+    ${
+        task.priority === "High"
+            ? "🔴 HIGH"
+            : task.priority === "Low"
+            ? "🟢 LOW"
+            : "🟡 MEDIUM"
+    }
+</div>
+
+    </div>
 
     <div>
 
@@ -111,10 +136,11 @@ function renderTasks(filter = "") {
 li.querySelector(".edit-btn").addEventListener("click", () => {
 
     taskInput.value = tasks[actualIndex].text;
+priority.value = tasks[actualIndex].priority;
 
-    editIndex = actualIndex;
+editIndex = actualIndex;
 
-    taskInput.focus();
+taskInput.focus();
 
 });
 
@@ -152,10 +178,11 @@ function addTask() {
 
     if (editIndex === -1) {
 
-        tasks.push({
-            text: text,
-            completed: false
-        });
+       tasks.push({
+    text: text,
+    completed: false,
+    priority: priority.value
+});
 
     } else {
 
@@ -165,14 +192,16 @@ function addTask() {
 
     }
 
-    saveTasks();
+   saveTasks();
 
-    renderTasks(searchTask.value);
+renderTasks(searchTask.value);
 
-    taskInput.value = "";
+taskInput.value = "";
+priority.value = "Medium";
 
-    taskInput.focus();
+editIndex = -1;
 
+taskInput.focus();
 }
 // ==========================================
 // Event Listeners

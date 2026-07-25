@@ -141,6 +141,21 @@ header h1{
 #taskInput:focus{
     box-shadow:0 0 0 3px rgba(34,139,230,.25);
 }
+#priority{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#eef3ff;
+    font-size:16px;
+    font-family:'Poppins',sans-serif;
+    cursor:pointer;
+    margin-left:10px;
+    outline:none;
+}
+
+#priority:focus{
+    box-shadow:0 0 0 3px rgba(255,122,24,.25);
+}
 
 /* Add Button */
 
@@ -321,4 +336,37 @@ header h1{
 
 .edit-btn:hover{
     background:#2980b9;
+}
+.task{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.task-content{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.priority{
+    display:inline-block;
+    width:fit-content;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+    color:#fff;
+}
+
+.priority.high{
+    background:#e74c3c;
+}
+
+.priority.medium{
+    background:#f39c12;
+}
+
+.priority.low{
+    background:#27ae60;
 }

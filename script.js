@@ -3,20 +3,21 @@
 // script.js
 // ==========================================
 
-// Elements
+// ---------- Elements ----------
 const taskInput = document.getElementById("taskInput");
 const priority = document.getElementById("priority");
+const dueDate = document.getElementById("dueDate");
 const addTaskBtn = document.getElementById("addTask");
+
 const taskList = document.getElementById("taskList");
 const taskCount = document.getElementById("taskCount");
+
 const currentDate = document.getElementById("currentDate");
+
 const searchTask = document.getElementById("searchTask");
 const searchSection = document.getElementById("searchSection");
 
-// ==========================================
-// Current Date
-// ==========================================
-
+// ---------- Current Date ----------
 const today = new Date();
 
 currentDate.textContent = today.toLocaleDateString("en-US", {
@@ -26,28 +27,33 @@ currentDate.textContent = today.toLocaleDateString("en-US", {
     day: "numeric"
 });
 
-// ==========================================
-// Local Storage
-// ==========================================
-
+// ---------- Local Storage ----------
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let editIndex = -1;
-// ==========================================
-// Save Tasks
-// ==========================================
 
+let editIndex = -1;
+
+// ---------- Save ----------
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// ==========================================
-// Update Task Counter
-// ==========================================
-
+// ---------- Counter ----------
 function updateCounter() {
-    taskCount.textContent = `${tasks.length}`;
+    taskCount.textContent = tasks.length;
 }
 
+// ---------- Format Date ----------
+function formatDate(date) {
+
+    if (!date) return "No Deadline";
+
+    return new Date(date).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+}
 // ==========================================
 // Render Tasks
 // ==========================================
@@ -56,7 +62,7 @@ function renderTasks(filter = "") {
 
     taskList.innerHTML = "";
 
-    // Show/Hide Search Box
+    // Show / Hide Search Box
     if (tasks.length === 0) {
         searchSection.style.display = "none";
     } else {
@@ -64,18 +70,34 @@ function renderTasks(filter = "") {
     }
 
     const priorityOrder = {
-    High: 1,
-    Medium: 2,
-    Low: 3
-};
+        High: 1,
+        Medium: 2,
+        Low: 3
+    };
 
-const filteredTasks = tasks
-    .filter(task =>
-        task.text.toLowerCase().includes(filter.toLowerCase())
-    )
-    .sort((a, b) => {
-        return priorityOrder[a.priority || "Medium"] - priorityOrder[b.priority || "Medium"];
-    });
+    const filteredTasks = tasks
+        .filter(task =>
+            task.text.toLowerCase().includes(filter.toLowerCase())
+        )
+        .sort((a, b) => {
+
+            // Sort by Priority
+            const priorityDiff =
+                priorityOrder[a.priority || "Medium"] -
+                priorityOrder[b.priority || "Medium"];
+
+            if (priorityDiff !== 0) {
+                return priorityDiff;
+            }
+
+            // Sort by Due Date
+            if (!a.dueDate && !b.dueDate) return 0;
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+
+            return new Date(a.dueDate) - new Date(b.dueDate);
+
+        });
 
     filteredTasks.forEach(task => {
 
@@ -89,38 +111,54 @@ const filteredTasks = tasks
         }
 
         li.innerHTML = `
-    <div class="task-content">
+            <div class="task-content">
 
-        <span>${task.text}</span>
+                <span>${task.text}</span>
 
-        <div class="priority ${(task.priority || "Medium").toLowerCase()}">
-    ${
-        task.priority === "High"
-            ? "🔴 HIGH"
-            : task.priority === "Low"
-            ? "🟢 LOW"
-            : "🟡 MEDIUM"
-    }
-</div>
+                <div class="task-info">
 
-    </div>
+                    <div class="priority ${(task.priority || "Medium").toLowerCase()}">
 
-    <div>
+                        ${
+                            task.priority === "High"
+                                ? "🔴 HIGH"
+                                : task.priority === "Low"
+                                ? "🟢 LOW"
+                                : "🟡 MEDIUM"
+                        }
 
-        <button class="complete-btn" title="Complete Task">
-            <i class="fa-solid fa-check"></i>
-        </button>
+                    </div>
 
-        <button class="edit-btn" title="Edit Task">
-            <i class="fa-solid fa-pen"></i>
-        </button>
+                    <div class="due-date">
 
-        <button class="delete-btn" title="Delete Task">
-            <i class="fa-solid fa-trash"></i>
-        </button>
+                        ${
+                            task.dueDate
+                                ? `📅 ${formatDate(task.dueDate)}`
+                                : "⏳ No Deadline"
+                        }
 
-    </div>
-`;
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <button class="complete-btn" title="Complete Task">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+
+                <button class="edit-btn" title="Edit Task">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+
+                <button class="delete-btn" title="Delete Task">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+
+            </div>
+        `;
 
         // Complete Task
         li.querySelector(".complete-btn").addEventListener("click", () => {
@@ -132,17 +170,21 @@ const filteredTasks = tasks
             renderTasks(searchTask.value);
 
         });
+
         // Edit Task
-li.querySelector(".edit-btn").addEventListener("click", () => {
+        li.querySelector(".edit-btn").addEventListener("click", () => {
 
-    taskInput.value = tasks[actualIndex].text;
-priority.value = tasks[actualIndex].priority;
+            taskInput.value = tasks[actualIndex].text;
 
-editIndex = actualIndex;
+            priority.value = tasks[actualIndex].priority || "Medium";
 
-taskInput.focus();
+            dueDate.value = tasks[actualIndex].dueDate || "";
 
-});
+            editIndex = actualIndex;
+
+            taskInput.focus();
+
+        });
 
         // Delete Task
         li.querySelector(".delete-btn").addEventListener("click", () => {
@@ -162,9 +204,8 @@ taskInput.focus();
     updateCounter();
 
 }
-
 // ==========================================
-// Add Task
+// Add / Edit Task
 // ==========================================
 
 function addTask() {
@@ -178,40 +219,46 @@ function addTask() {
 
     if (editIndex === -1) {
 
-       tasks.push({
-    text: text,
-    completed: false,
-    priority: priority.value
-});
+        // Add New Task
+        tasks.push({
+            text: text,
+            completed: false,
+            priority: priority.value,
+            dueDate: dueDate.value
+        });
 
     } else {
 
+        // Update Existing Task
         tasks[editIndex].text = text;
+        tasks[editIndex].priority = priority.value;
+        tasks[editIndex].dueDate = dueDate.value;
 
         editIndex = -1;
 
     }
 
-   saveTasks();
+    saveTasks();
 
-renderTasks(searchTask.value);
+    renderTasks(searchTask.value);
 
-taskInput.value = "";
-priority.value = "Medium";
+    // Reset Form
+    taskInput.value = "";
+    priority.value = "Medium";
+    dueDate.value = "";
 
-editIndex = -1;
+    taskInput.focus();
 
-taskInput.focus();
 }
 // ==========================================
 // Event Listeners
 // ==========================================
 
-// Add Button
+// Add Task Button
 addTaskBtn.addEventListener("click", addTask);
 
-// Press Enter
-taskInput.addEventListener("keypress", function (e) {
+// Press Enter to Add Task
+taskInput.addEventListener("keypress", (e) => {
 
     if (e.key === "Enter") {
         addTask();
@@ -219,8 +266,8 @@ taskInput.addEventListener("keypress", function (e) {
 
 });
 
-// Search
-searchTask.addEventListener("keyup", function () {
+// Search Tasks
+searchTask.addEventListener("keyup", () => {
 
     renderTasks(searchTask.value);
 

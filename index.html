@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mukul's To-Do App</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <header>
+
+        <h1>Mukul's To-Do App</h1>
+
+        <p class="subtitle">
+            Stay organized. Stay productive.
+        </p>
+
+    </header>
+
+
+    <!-- Main Container -->
+
+    <div class="container">
+
+        <!-- Date + Counter -->
+
+        <div class="top-info">
+
+            <p id="currentDate"></p>
+
+            <div class="task-counter">
+
+                <span id="taskCount">0</span> Tasks
+
+            </div>
+
+        </div>
+
+
+        <!-- Todo Card -->
+
+        <div class="todo-app">
+
+            <!-- Input -->
+
+            <div class="input-section">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Enter a new task...">
+
+                <button id="addTask" title="Add Task">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+
+            </div>
+
+
+            <!-- Search -->
+
+            <div class="search-section" id="searchSection">
+
+                <input
+                    type="text"
+                    id="searchTask"
+                    placeholder="Search tasks...">
+
+            </div>
+
+
+            <!-- Task List -->
+
+            <ul id="taskList">
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>

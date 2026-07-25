@@ -1,0 +1,324 @@
+/* ==========================
+   Mukul's To-Do App
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#071428,#0f3057);
+    padding:50px 20px;
+}
+
+/* Header */
+
+header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+header h1{
+    color:#ffffff;
+    font-size:48px;
+    font-weight:700;
+}
+
+.subtitle{
+    color:#c9d6f3;
+    margin-top:10px;
+    font-size:18px;
+}
+/* Info Bar */
+
+.info-bar{
+
+    width:100%;
+    max-width:750px;
+
+    margin:25px auto 35px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:500;
+
+}
+
+#currentDate{
+
+    color:#cfd9ff;
+
+}
+
+#taskCounter{
+
+    background:#ff7a18;
+
+    padding:8px 18px;
+
+    border-radius:20px;
+
+    color:white;
+
+}
+
+/* Main Container */
+
+.container{
+    max-width:750px;
+    margin:0 auto;
+}
+
+/* Card */
+
+.todo-app{
+    background:#ffffff;
+    border-radius:22px;
+    padding:35px;
+    box-shadow:0 20px 45px rgba(0,0,0,.25);
+}
+
+/* Input Section */
+
+.input-section{
+    display:flex;
+    gap:15px;
+    margin-bottom:30px;
+}
+/* Search */
+
+.search-section{
+
+    margin-bottom:25px;
+
+}
+
+#searchTask{
+
+    width:100%;
+
+    padding:15px 18px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:12px;
+
+    background:#eef3ff;
+
+    font-size:16px;
+
+}
+
+#searchTask:focus{
+
+    box-shadow:0 0 0 3px rgba(34,139,230,.25);
+
+}
+
+#taskInput{
+    flex:1;
+    padding:18px;
+    border:none;
+    outline:none;
+    background:#eef3ff;
+    border-radius:12px;
+    font-size:16px;
+    transition:.3s;
+}
+
+#taskInput:focus{
+    box-shadow:0 0 0 3px rgba(34,139,230,.25);
+}
+
+/* Add Button */
+
+#addTask{
+    width:65px;
+    border:none;
+    border-radius:12px;
+    background:#ff7a18;
+    color:white;
+    cursor:pointer;
+    font-size:24px;
+    transition:.3s;
+}
+
+#addTask:hover{
+    background:#ff6200;
+    transform:scale(1.08);
+}
+
+/* Task List */
+
+#taskList{
+    list-style:none;
+}
+
+/* Empty Message */
+
+.empty{
+    text-align:center;
+    color:#888;
+    margin-top:25px;
+    font-size:15px;
+}
+
+/* ==========================
+   Task Card
+========================== */
+
+.task{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 20px;
+    margin-bottom:15px;
+    background:#eef3ff;
+    border-radius:12px;
+    animation:fadeIn .3s;
+}
+
+.task span{
+    font-size:17px;
+    color:#333;
+}
+
+/* Completed Task */
+
+.completed span{
+    text-decoration:line-through;
+    color:#888;
+}
+
+/* Buttons */
+
+.task-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.complete-btn,
+.delete-btn{
+    border:none;
+    cursor:pointer;
+    padding:10px 14px;
+    border-radius:8px;
+    color:white;
+    transition:.3s;
+}
+
+.complete-btn{
+    background:#27ae60;
+}
+
+.complete-btn:hover{
+    background:#1e8449;
+}
+
+.delete-btn{
+    background:#e74c3c;
+}
+
+.delete-btn:hover{
+    background:#c0392b;
+}
+
+/* Animation */
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Responsive */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:34px;
+    }
+
+    .todo-app{
+        padding:25px;
+    }
+
+    #taskInput{
+        font-size:15px;
+    }
+
+    #addTask{
+        width:55px;
+    }
+}
+.completed span{
+    text-decoration: line-through;
+    opacity: .6;
+}
+
+.complete-btn{
+    background:#27ae60;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:10px 14px;
+    cursor:pointer;
+    margin-right:10px;
+    transition:.3s;
+}
+
+.complete-btn:hover{
+    background:#1e8449;
+}
+.top-info{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+#currentDate{
+    color:#d9e6ff;
+    font-size:22px;
+    font-weight:500;
+}
+
+.task-counter{
+    background:#ff7a18;
+    color:white;
+    padding:10px 22px;
+    border-radius:30px;
+    font-weight:600;
+    font-size:18px;
+}
+.edit-btn{
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-right:10px;
+    transition:.3s;
+}
+
+.edit-btn:hover{
+    background:#2980b9;
+}

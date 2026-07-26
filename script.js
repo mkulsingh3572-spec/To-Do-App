@@ -17,6 +17,9 @@ const currentDate = document.getElementById("currentDate");
 const searchTask = document.getElementById("searchTask");
 const searchSection = document.getElementById("searchSection");
 const filterButtons = document.querySelectorAll(".filter-btn");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const progressStatus = document.getElementById("progressStatus");
 
 // ---------- Current Date ----------
 const today = new Date();
@@ -43,6 +46,54 @@ function saveTasks() {
 function updateCounter() {
     taskCount.textContent = tasks.length;
 }
+// ==========================================
+// Progress Bar
+// ==========================================
+
+function updateProgress() {
+
+    const totalTasks = tasks.length;
+
+    const completedTasks = tasks.filter(task => task.completed).length;
+
+    const percentage =
+        totalTasks === 0
+            ? 0
+            : Math.round((completedTasks / totalTasks) * 100);
+
+    progressFill.style.width = percentage + "%";
+
+ if (percentage < 30) {
+
+    // Red
+    progressFill.style.background = "#e74c3c";
+    progressText.style.color = "#e74c3c";
+
+}
+else if (percentage < 70) {
+
+    // Orange
+    progressFill.style.background = "#f39c12";
+    progressText.style.color = "#f39c12";
+
+}
+else {
+
+    // Green
+    progressFill.style.background = "#27ae60";
+    progressText.style.color = "#27ae60";
+
+}
+
+    progressText.textContent =
+    percentage === 100
+        ? "🎉 100%"
+        : percentage + "%";
+    progressStatus.textContent =
+        `${completedTasks} of ${totalTasks} Tasks Completed`;
+
+}
+
 
 // ---------- Format Date ----------
 function formatDate(date) {
@@ -217,7 +268,8 @@ function renderTasks(filter = "") {
 
     });
 
-    updateCounter();
+   updateCounter();
+   updateProgress();
 
 }
 // ==========================================

@@ -398,3 +398,33 @@ header h1{
     color:#555;
     font-weight:500;
 }
+/* ===========================
+   Filters
+=========================== */
+
+.filter-section{
+    display:flex;
+    gap:12px;
+    margin:20px 0;
+}
+
+.filter-btn{
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:.3s;
+    background:#eef3ff;
+    color:#333;
+}
+
+.filter-btn:hover{
+    background:#dbe7ff;
+}
+
+.filter-btn.active{
+    background:#ff7a18;
+    color:white;
+}

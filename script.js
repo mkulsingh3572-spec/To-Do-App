@@ -16,6 +16,7 @@ const currentDate = document.getElementById("currentDate");
 
 const searchTask = document.getElementById("searchTask");
 const searchSection = document.getElementById("searchSection");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
 // ---------- Current Date ----------
 const today = new Date();
@@ -31,6 +32,7 @@ currentDate.textContent = today.toLocaleDateString("en-US", {
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 let editIndex = -1;
+let currentFilter = "all";
 
 // ---------- Save ----------
 function saveTasks() {
@@ -76,10 +78,24 @@ function renderTasks(filter = "") {
     };
 
     const filteredTasks = tasks
-        .filter(task =>
-            task.text.toLowerCase().includes(filter.toLowerCase())
-        )
-        .sort((a, b) => {
+    .filter(task => {
+
+        // Search Filter
+        const matchesSearch =
+            task.text.toLowerCase().includes(filter.toLowerCase());
+
+        // Status Filter
+        const matchesStatus =
+            currentFilter === "all" ||
+            (currentFilter === "active" && !task.completed) ||
+            (currentFilter === "completed" && task.completed);
+
+        return matchesSearch && matchesStatus;
+
+    })
+        .sort((a, b) => {if (a.completed !== b.completed) {
+    return a.completed ? 1 : -1;
+}
 
             // Sort by Priority
             const priorityDiff =
@@ -270,6 +286,31 @@ taskInput.addEventListener("keypress", (e) => {
 searchTask.addEventListener("keyup", () => {
 
     renderTasks(searchTask.value);
+
+});
+// ==========================================
+// Filter Buttons
+// ==========================================
+
+filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        // Remove active class
+        filterButtons.forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+        // Highlight clicked button
+        button.classList.add("active");
+
+        // Update current filter
+        currentFilter = button.dataset.filter;
+
+        // Refresh tasks
+        renderTasks(searchTask.value);
+
+    });
 
 });
 

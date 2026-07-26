@@ -4,6 +4,20 @@
 // ==========================================
 
 // ---------- Elements ----------
+const themeBtn = document.getElementById("themeBtn");
+let darkMode = localStorage.getItem("theme") === "dark";
+if (darkMode) {
+
+    document.body.classList.add("dark-theme");
+
+    themeBtn.textContent = "☀️";
+
+}
+else {
+
+    themeBtn.textContent = "🌙";
+
+}
 const taskInput = document.getElementById("taskInput");
 const priority = document.getElementById("priority");
 const dueDate = document.getElementById("dueDate");
@@ -371,3 +385,17 @@ filterButtons.forEach(button => {
 // ==========================================
 
 renderTasks();
+themeBtn.addEventListener("click", () => {
+
+    darkMode = !darkMode;
+
+    document.body.classList.toggle("dark-theme");
+
+    themeBtn.textContent = darkMode ? "☀️" : "🌙";
+
+    localStorage.setItem(
+        "theme",
+        darkMode ? "dark" : "light"
+    );
+
+});

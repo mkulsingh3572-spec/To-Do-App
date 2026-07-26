@@ -2,6 +2,26 @@
    Mukul's To-Do App
 ========================== */
 
+/* ===========================
+   Theme Colors
+=========================== */
+
+:root{
+
+    --bg-gradient:linear-gradient(135deg,#071428,#0f3057);
+
+    --card-color:#ffffff;
+
+    --input-bg:#eef3ff;
+
+    --task-bg:#eef3ff;
+
+    --text-color:#1e1e1e;
+
+    --subtitle-color:#c9d6f3;
+
+    --progress-bg:#dfe6ff;
+}
 *{
     margin:0;
     padding:0;
@@ -11,27 +31,82 @@
 
 body{
     min-height:100vh;
-    background:linear-gradient(135deg,#071428,#0f3057);
+    background:var(--bg-gradient);
     padding:50px 20px;
+    transition:background .4s ease;
 }
 
 /* Header */
 
 header{
-    text-align:center;
-    margin-bottom:40px;
+
+    max-width:750px;
+
+    margin:0 auto 40px;
+
 }
 
+/* Header top (Title + Theme Button) */
+
+.header-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+}
 header h1{
+
     color:#ffffff;
+
     font-size:48px;
+
     font-weight:700;
+
+    margin:0;
+
+}
+
+#themeBtn{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+    background:var(--input-bg);
+
+    transition:.3s ease;
+
+}
+
+#themeBtn:hover{
+
+    transform:scale(1.08) rotate(15deg);
+
+    box-shadow:0 6px 15px rgba(0,0,0,.25);
+
 }
 
 .subtitle{
-    color:#c9d6f3;
-    margin-top:10px;
+
+    color:var(--subtitle-color);
+
     font-size:18px;
+
+    margin:0;
+
 }
 /* Info Bar */
 
@@ -82,10 +157,11 @@ header h1{
 /* Card */
 
 .todo-app{
-    background:#ffffff;
+    background:var(--card-color);
     border-radius:22px;
     padding:35px;
     box-shadow:0 20px 45px rgba(0,0,0,.25);
+    transition:.4s ease;
 }
 
 /* Input Section */
@@ -115,7 +191,8 @@ header h1{
 
     border-radius:12px;
 
-    background:#eef3ff;
+    background:var(--input-bg);
+    color:var(--text-color);
 
     font-size:16px;
 
@@ -132,7 +209,8 @@ header h1{
     padding:18px;
     border:none;
     outline:none;
-    background:#eef3ff;
+    background:var(--input-bg);
+    color:var(--text-color);
     border-radius:12px;
     font-size:16px;
     transition:.3s;
@@ -145,7 +223,8 @@ header h1{
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#eef3ff;
+    background:var(--input-bg);
+    color:var(--text-color);
     font-size:16px;
     font-family:'Poppins',sans-serif;
     cursor:pointer;
@@ -185,7 +264,7 @@ header h1{
 
 .empty{
     text-align:center;
-    color:#888;
+    color:var(--subtitle-color);
     margin-top:25px;
     font-size:15px;
 }
@@ -200,14 +279,14 @@ header h1{
     align-items:center;
     padding:16px 20px;
     margin-bottom:15px;
-    background:#eef3ff;
+    background:var(--task-bg);
     border-radius:12px;
     animation:fadeIn .3s;
 }
 
 .task span{
     font-size:17px;
-    color:#333;
+    color:var(--text-color);
 }
 
 /* Completed Task */
@@ -374,7 +453,8 @@ header h1{
     padding:14px;
     border:none;
     border-radius:12px;
-    background:#eef3ff;
+    background:var(--input-bg);
+    color:var(--text-color);
     font-size:15px;
     font-family:'Poppins',sans-serif;
     cursor:pointer;
@@ -395,7 +475,7 @@ header h1{
 
 .due-date{
     font-size:14px;
-    color:#555;
+    color:var(--subtitle-color);
     font-weight:500;
 }
 /* ===========================
@@ -416,9 +496,8 @@ header h1{
     font-size:15px;
     font-weight:600;
     transition:.3s;
-    background:#eef3ff;
-    color:#333;
-
+    background:var(--input-bg);
+    color:var(--text-color);
     min-width:120px;
     text-align:center;
 }
@@ -430,6 +509,59 @@ header h1{
 .filter-btn.active{
     background:#ff7a18;
     color:white;
+}
+/* ===========================
+   App Header
+=========================== */
+
+.app-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.app-header h2{
+
+    font-size:28px;
+
+    color:var(--text-color);
+
+    font-weight:700;
+
+    margin:0;
+
+}
+
+#themeBtn{
+
+    width:46px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    background:var(--input-bg);
+
+    font-size:22px;
+
+    transition:.3s ease;
+
+}
+
+#themeBtn:hover{
+
+    transform:scale(1.08);
+
 }
 /* ===========================
    Progress Bar
@@ -476,4 +608,25 @@ header h1{
     font-size:24px;
     font-weight:700;
     color:#ff7a18;
+}
+/* ===========================
+   Dark Theme
+=========================== */
+
+.dark-theme{
+
+    --bg-gradient:linear-gradient(135deg,#111827,#1f2937);
+
+    --card-color:#1e293b;
+
+    --input-bg:#3b4454;
+
+    --task-bg:#2f3a4d;
+
+    --text-color:#ffffff;
+
+    --subtitle-color:#cbd5e1;
+
+    --progress-bg:#475569;
+
 }

@@ -257,15 +257,22 @@ function renderTasks(filter = "") {
         `;
 
         // Complete Task
-        li.querySelector(".complete-btn").addEventListener("click", () => {
+        function toggleComplete(index){
 
-            tasks[actualIndex].completed = !tasks[actualIndex].completed;
+    tasks[index].completed = !tasks[index].completed;
 
-            saveTasks();
+    showToast(
+        tasks[index].completed
+            ? "✔️ Task completed!"
+            : "↩️ Task marked active!",
+        "success"
+    );
 
-            renderTasks(searchTask.value);
+    saveTasks();
 
-        });
+    renderTasks(searchInput.value);
+
+}
 
         // Edit Task
         li.querySelector(".edit-btn").addEventListener("click", () => {
@@ -286,13 +293,15 @@ function renderTasks(filter = "") {
         // Delete Task
         li.querySelector(".delete-btn").addEventListener("click", () => {
 
-            tasks.splice(actualIndex, 1);
+    tasks.splice(actualIndex, 1);
 
-            saveTasks();
+    showToast("🗑️ Task deleted!", "error");
 
-            renderTasks(searchTask.value);
+    saveTasks();
 
-        });
+    renderTasks(searchTask.value);
+
+});
 
         taskList.appendChild(li);
 
@@ -311,7 +320,7 @@ function addTask() {
     const text = taskInput.value.trim();
 
     if (text === "") {
-        alert("Please enter a task!");
+        showToast("⚠️ Please enter a task!", "warning");
         return;
     }
 
@@ -333,6 +342,7 @@ function addTask() {
 tasks[editIndex].priority = priority.value;
 tasks[editIndex].category = category.value;
 tasks[editIndex].dueDate = dueDate.value;
+ showToast("✅ Task added successfully!", "success");
 
         editIndex = -1;
 
@@ -348,6 +358,31 @@ priority.value = "Medium";
 category.value = "Personal";
 dueDate.value = "";
     taskInput.focus();
+
+}
+// ==========================================
+// Toast Notification
+// ==========================================
+
+const toast = document.getElementById("toast");
+
+function showToast(message, type = "success") {
+
+    toast.textContent = message;
+
+    toast.className = "";
+
+    toast.classList.add(type);
+
+    toast.classList.add("show");
+
+    clearTimeout(showToast.timer);
+
+    showToast.timer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2500);
 
 }
 // ==========================================

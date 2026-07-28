@@ -224,7 +224,7 @@ function renderTasks(filter = "") {
 
             </div>
 
-            <div>
+            <div class="task-buttons">
 
                 <button class="complete-btn" title="Complete Task">
                     <i class="fa-solid fa-check"></i>

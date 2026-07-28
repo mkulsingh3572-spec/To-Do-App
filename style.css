@@ -344,7 +344,7 @@ header h1{
 }
 
 #priority,
-
+#category,
 #dueDate{
 
     padding:14px;
@@ -366,7 +366,7 @@ header h1{
 }
 
 #priority:focus,
-
+#category:focus,
 #dueDate:focus{
 
     box-shadow:0 0 0 3px rgba(255,122,24,.25);
@@ -592,9 +592,11 @@ header h1{
 
     align-items:center;
 
+    gap:8px;
+
     flex-wrap:wrap;
 
-    gap:12px;
+    margin-top:8px;
 
 }
 
@@ -633,6 +635,51 @@ header h1{
 .priority.low{
 
     background:#27ae60;
+
+}
+/* ==========================================
+   Category Badge
+========================================== */
+
+.category{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:#fff;
+
+}
+
+.category.study{
+
+    background:#3498db;
+
+}
+
+.category.work{
+
+    background:#8e44ad;
+
+}
+
+.category.personal{
+
+    background:#16a085;
+
+}
+
+.category.fitness{
+
+    background:#e67e22;
 
 }
 
@@ -1070,7 +1117,7 @@ header h1{
 
     .todo-app{
 
-        padding:20px;
+        padding:16px;
 
     }
 
@@ -1114,11 +1161,9 @@ header h1{
 
     display:flex;
 
-    justify-content:space-between;
+    gap:10px;
 
-    gap:12px;
-
-    margin-top:15px;
+    margin-top:14px;
 
 }
 
@@ -1128,9 +1173,77 @@ header h1{
 
     height:48px;
 
-    padding:0;
+}
+.task-info{
 
-    font-size:18px;
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:6px;
+
+    align-items:center;
+
+    margin-top:8px;
+
+}
+
+.category,
+.priority{
+
+    font-size:11px;
+
+    padding:4px 9px;
+
+}
+
+.due-date{
+
+    font-size:12px;
+
+}
+.input-section{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:12px;
+
+    align-items:stretch;
+
+}
+#taskInput{
+
+    grid-column:1 / 3;
+
+}
+
+#priority{
+
+    grid-column:1;
+
+}
+
+#category{
+
+    grid-column:2;
+
+}
+
+#dueDate{
+
+    grid-column:1;
+
+}
+
+#addTask{
+
+    grid-column:2;
+
+    width:100%;
+
+    height:52px;
 
 }
 

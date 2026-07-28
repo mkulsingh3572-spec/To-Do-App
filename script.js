@@ -20,6 +20,7 @@ else {
 }
 const taskInput = document.getElementById("taskInput");
 const priority = document.getElementById("priority");
+const category = document.getElementById("category");
 const dueDate = document.getElementById("dueDate");
 const addTaskBtn = document.getElementById("addTask");
 
@@ -198,29 +199,43 @@ function renderTasks(filter = "") {
 
                 <div class="task-info">
 
-                    <div class="priority ${(task.priority || "Medium").toLowerCase()}">
+    <div class="category ${(task.category || "Personal").toLowerCase()}">
 
-                        ${
-                            task.priority === "High"
-                                ? "🔴 HIGH"
-                                : task.priority === "Low"
-                                ? "🟢 LOW"
-                                : "🟡 MEDIUM"
-                        }
+        ${
+            task.category === "Study"
+                ? "📚 STUDY"
+                : task.category === "Work"
+                ? "💼 WORK"
+                : task.category === "Fitness"
+                ? "🏋️ FITNESS"
+                : "🏠 PERSONAL"
+        }
 
-                    </div>
+    </div>
 
-                    <div class="due-date">
+    <div class="priority ${(task.priority || "Medium").toLowerCase()}">
 
-                        ${
-                            task.dueDate
-                                ? `📅 ${formatDate(task.dueDate)}`
-                                : "⏳ No Deadline"
-                        }
+        ${
+            task.priority === "High"
+                ? "🔴 HIGH"
+                : task.priority === "Low"
+                ? "🟢 LOW"
+                : "🟡 MEDIUM"
+        }
 
-                    </div>
+    </div>
 
-                </div>
+    <div class="due-date">
+
+        ${
+            task.dueDate
+                ? `📅 ${formatDate(task.dueDate)}`
+                : "⏳ No Deadline"
+        }
+
+    </div>
+
+</div>
 
             </div>
 
@@ -258,6 +273,7 @@ function renderTasks(filter = "") {
             taskInput.value = tasks[actualIndex].text;
 
             priority.value = tasks[actualIndex].priority || "Medium";
+            category.value = tasks[actualIndex].category || "Personal";
 
             dueDate.value = tasks[actualIndex].dueDate || "";
 
@@ -303,18 +319,20 @@ function addTask() {
 
         // Add New Task
         tasks.push({
-            text: text,
-            completed: false,
-            priority: priority.value,
-            dueDate: dueDate.value
-        });
+    text: text,
+    completed: false,
+    priority: priority.value,
+    category: category.value,
+    dueDate: dueDate.value
+});
 
     } else {
 
         // Update Existing Task
         tasks[editIndex].text = text;
-        tasks[editIndex].priority = priority.value;
-        tasks[editIndex].dueDate = dueDate.value;
+tasks[editIndex].priority = priority.value;
+tasks[editIndex].category = category.value;
+tasks[editIndex].dueDate = dueDate.value;
 
         editIndex = -1;
 
@@ -326,9 +344,9 @@ function addTask() {
 
     // Reset Form
     taskInput.value = "";
-    priority.value = "Medium";
-    dueDate.value = "";
-
+priority.value = "Medium";
+category.value = "Personal";
+dueDate.value = "";
     taskInput.focus();
 
 }

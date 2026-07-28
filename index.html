@@ -90,15 +90,22 @@
         placeholder="Enter a new task...">
 
     <select id="priority" title="Task Priority">
-        <option value="High">🔴 HIGH</option>
-        <option value="Medium" selected>🟡 MEDIUM</option>
-        <option value="Low">🟢 LOW</option>
-    </select>
+    <option value="High">🔴 HIGH</option>
+    <option value="Medium" selected>🟡 MEDIUM</option>
+    <option value="Low">🟢 LOW</option>
+</select>
 
-    <input
-        type="date"
-        id="dueDate"
-        title="Due Date">
+<select id="category" title="Task Category">
+    <option value="Study">📚 Study</option>
+    <option value="Work">💼 Work</option>
+    <option value="Personal" selected>🏠 Personal</option>
+    <option value="Fitness">🏋️ Fitness</option>
+</select>
+
+<input
+    type="date"
+    id="dueDate"
+    title="Due Date">
 
     <button id="addTask" title="Add Task">
         <i class="fa-solid fa-plus"></i>

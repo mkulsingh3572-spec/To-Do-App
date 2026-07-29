@@ -1335,5 +1335,95 @@ header h1{
         font-size:14px;
 
     }
+    .stats-section{
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+}
+
+.stat-card{
+
+    padding:18px;
+
+}
+
+.stat-card h2{
+
+    font-size:26px;
+
+}
+
+.stat-icon{
+
+    font-size:26px;
+
+}
+
+}
+/* ==========================================
+   Statistics Dashboard
+========================================== */
+
+.stats-section{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+
+    gap:18px;
+
+    margin:30px 0;
+
+}
+
+.stat-card{
+
+    background:var(--card-bg);
+
+    border-radius:18px;
+
+    padding:24px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.3s ease;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.stat-icon{
+
+    font-size:32px;
+
+    margin-bottom:10px;
+
+}
+
+.stat-card h2{
+
+    font-size:34px;
+
+    margin:8px 0;
+
+    color:var(--primary);
+
+}
+
+.stat-card p{
+
+    color:var(--text-light);
+
+    font-size:14px;
+
+    letter-spacing:.5px;
 
 }

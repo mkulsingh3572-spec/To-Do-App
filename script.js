@@ -108,6 +108,29 @@ else {
         `${completedTasks} of ${totalTasks} Tasks Completed`;
 
 }
+function updateStatistics(){
+
+    const total = tasks.length;
+
+    const completed = tasks.filter(task => task.completed).length;
+
+    const pending = total - completed;
+
+    const successRate =
+        total === 0
+            ? 0
+            : Math.round((completed / total) * 100);
+
+    document.getElementById("totalTasks").textContent = total;
+
+    document.getElementById("completedTasks").textContent = completed;
+
+    document.getElementById("pendingTasks").textContent = pending;
+
+    document.getElementById("completionRate").textContent =
+        successRate + "%";
+
+}
 
 
 // ---------- Format Date ----------
@@ -270,7 +293,7 @@ function renderTasks(filter = "") {
 
     saveTasks();
 
-    renderTasks(searchInput.value);
+    renderTasks(searchTask.value);
 
 }
 
@@ -309,6 +332,7 @@ function renderTasks(filter = "") {
 
    updateCounter();
    updateProgress();
+   updateStatistics();
 
 }
 // ==========================================
@@ -326,27 +350,30 @@ function addTask() {
 
     if (editIndex === -1) {
 
-        // Add New Task
-        tasks.push({
-    text: text,
-    completed: false,
-    priority: priority.value,
-    category: category.value,
-    dueDate: dueDate.value
-});
+    // Add New Task
+    tasks.push({
+        text: text,
+        completed: false,
+        priority: priority.value,
+        category: category.value,
+        dueDate: dueDate.value
+    });
 
-    } else {
+    showToast("✅ Task added successfully!", "success");
 
-        // Update Existing Task
-        tasks[editIndex].text = text;
-tasks[editIndex].priority = priority.value;
-tasks[editIndex].category = category.value;
-tasks[editIndex].dueDate = dueDate.value;
- showToast("✅ Task added successfully!", "success");
+} else {
 
-        editIndex = -1;
+    // Update Existing Task
+    tasks[editIndex].text = text;
+    tasks[editIndex].priority = priority.value;
+    tasks[editIndex].category = category.value;
+    tasks[editIndex].dueDate = dueDate.value;
 
-    }
+    showToast("✏️ Task updated!", "info");
+
+    editIndex = -1;
+
+}
 
     saveTasks();
 

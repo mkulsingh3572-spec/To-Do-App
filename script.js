@@ -316,14 +316,31 @@ function renderTasks(filter = "") {
         // Delete Task
         li.querySelector(".delete-btn").addEventListener("click", () => {
 
-    tasks.splice(actualIndex, 1);
+    deletedTask = tasks[actualIndex];
 
-    showToast("🗑️ Task deleted!", "error");
+deletedIndex = actualIndex;
 
-    saveTasks();
+tasks.splice(actualIndex,1);
 
-    renderTasks(searchTask.value);
+undoBtn.style.display = "block";
 
+showToast("🗑️ Task deleted","error");
+
+saveTasks();
+
+renderTasks(searchTask.value);
+
+clearTimeout(window.undoTimer);
+
+window.undoTimer = setTimeout(()=>{
+
+    deletedTask = null;
+
+    deletedIndex = null;
+
+    undoBtn.style.display = "none";
+
+},5000);
 });
 
         taskList.appendChild(li);
@@ -392,10 +409,15 @@ dueDate.value = "";
 // ==========================================
 
 const toast = document.getElementById("toast");
+const toastMessage = document.getElementById("toastMessage");
+const undoBtn = document.getElementById("undoBtn");
+
+let deletedTask = null;
+let deletedIndex = null;
 
 function showToast(message, type = "success") {
 
-    toast.textContent = message;
+    toastMessage.textContent = message;
 
     toast.className = "";
 
@@ -457,6 +479,25 @@ filterButtons.forEach(button => {
         renderTasks(searchTask.value);
 
     });
+
+});
+undoBtn.addEventListener("click",()=>{
+
+    if(deletedTask===null) return;
+
+    tasks.splice(deletedIndex,0,deletedTask);
+
+    saveTasks();
+
+    renderTasks(searchTask.value);
+
+    showToast("↩️ Task restored!","success");
+
+    undoBtn.style.display="none";
+
+    deletedTask=null;
+
+    deletedIndex=null;
 
 });
 

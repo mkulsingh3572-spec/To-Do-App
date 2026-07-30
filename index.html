@@ -203,12 +203,32 @@
     </select>
 
 </div>
+<!-- Backup Section -->
 
-<!-- Task List -->
+<div class="backup-section">
 
-<ul id="taskList">
+    <button id="exportBtn">
+        <i class="fa-solid fa-download"></i>
+        Export Tasks
+    </button>
 
-</ul>
+    <label for="importFile" class="import-btn">
+        <i class="fa-solid fa-upload"></i>
+        Import Tasks
+    </label>
+
+    <input
+        type="file"
+        id="importFile"
+        accept=".json"
+        hidden>
+
+</div>
+
+ <ul id="taskList"></ul>
+
+
+
         </div>
 
     </div>

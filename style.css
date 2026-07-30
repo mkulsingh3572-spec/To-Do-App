@@ -1558,3 +1558,46 @@ gap:20px;
     transform:scale(1.02);
     transition:.2s;
 }
+/* Backup Section */
+
+.backup-section{
+
+    display:flex;
+
+    gap:10px;
+
+    margin:20px 0;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+}
+
+.backup-section button,
+.import-btn{
+
+    background:#3498db;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 18px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.backup-section button:hover,
+.import-btn:hover{
+
+    background:#2980b9;
+
+}

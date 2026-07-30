@@ -35,6 +35,8 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 const sortBy = document.getElementById("sortBy");
 let currentSort = "manual";
 const categoryFilter = document.getElementById("categoryFilter");
+const exportBtn = document.getElementById("exportBtn");
+const importFile = document.getElementById("importFile");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressStatus = document.getElementById("progressStatus");
@@ -449,13 +451,90 @@ function addTask() {
     renderTasks(searchTask.value);
 
     // Reset Form
-    taskInput.value = "";
-priority.value = "Medium";
-category.value = "Personal";
-dueDate.value = "";
+       taskInput.value = "";
+    priority.value = "Medium";
+    category.value = "Personal";
+    dueDate.value = "";
     taskInput.focus();
 
 }
+
+// ==========================================
+// Export Tasks
+// ==========================================
+
+function exportTasks(){
+
+    const data = JSON.stringify(tasks, null, 2);
+
+    const blob = new Blob([data], {
+        type:"application/json"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.download = "tasks.json";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+    showToast("📤 Tasks exported successfully!", "success");
+
+}
+// ==========================================
+// Import Tasks
+// ==========================================
+
+function importTasks(event){
+
+    const file = event.target.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        try{
+
+            const importedTasks = JSON.parse(e.target.result);
+
+            if(!Array.isArray(importedTasks)){
+                throw new Error();
+            }
+
+           if (!confirm("Importing will replace all current tasks. Continue?")) {
+    return;
+}
+
+tasks = importedTasks;
+
+            saveTasks();
+
+            renderTasks(searchTask.value);
+
+            showToast("📥 Tasks imported successfully!", "success");
+            importFile.value = "";
+
+        }
+
+        catch{
+
+            showToast("❌ Invalid JSON file!", "error");
+
+        }
+
+    };
+
+    reader.readAsText(file);
+
+}
+
 // ==========================================
 // Toast Notification
 // ==========================================
@@ -511,6 +590,9 @@ searchTask.addEventListener("keyup", () => {
     renderTasks(searchTask.value);
 
 });
+exportBtn.addEventListener("click", exportTasks);
+
+importFile.addEventListener("change", importTasks);
 sortBy.addEventListener("change", () => {
 
     currentSort = sortBy.value;
@@ -525,6 +607,7 @@ categoryFilter.addEventListener("change", () => {
     renderTasks(searchTask.value);
 
 });
+
 // ==========================================
 // Filter Buttons
 // ==========================================

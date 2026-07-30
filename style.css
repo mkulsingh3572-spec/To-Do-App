@@ -499,6 +499,72 @@ header h1{
     color:#ffffff;
 
 }
+.sort-section{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin:20px 0;
+
+}
+
+.sort-section label{
+
+    font-weight:600;
+
+}
+
+.sort-section select{
+
+    padding:10px 14px;
+
+    border-radius:10px;
+
+    border:none;
+
+    outline:none;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+.category-filter-section{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin:18px 0;
+
+}
+
+.category-filter-section label{
+
+    font-weight:600;
+
+}
+
+.category-filter-section select{
+
+    padding:10px 14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--input-bg);
+
+    color:var(--text-color);
+
+    cursor:pointer;
+
+}
 /* ==========================================
    Task List
 ========================================== */
@@ -1462,5 +1528,24 @@ gap:20px;
 
     letter-spacing:.5px;
     
+
+}
+.task{
+
+    cursor: grab;
+
+}
+
+.task:active{
+
+    cursor: grabbing;
+
+}
+
+.task.dragging{
+
+    opacity: .5;
+
+    transform: scale(.98);
 
 }

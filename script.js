@@ -32,6 +32,9 @@ const currentDate = document.getElementById("currentDate");
 const searchTask = document.getElementById("searchTask");
 const searchSection = document.getElementById("searchSection");
 const filterButtons = document.querySelectorAll(".filter-btn");
+const sortBy = document.getElementById("sortBy");
+let currentSort = "manual";
+const categoryFilter = document.getElementById("categoryFilter");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressStatus = document.getElementById("progressStatus");
@@ -48,9 +51,15 @@ currentDate.textContent = today.toLocaleDateString("en-US", {
 
 // ---------- Local Storage ----------
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+tasks.forEach((task, index) => {
+    if (task.order === undefined) {
+        task.order = index;
+    }
+});
 
 let editIndex = -1;
 let currentFilter = "all";
+let currentCategory = "all";
 
 // ---------- Save ----------
 function saveTasks() {
@@ -169,47 +178,73 @@ function renderTasks(filter = "") {
     const filteredTasks = tasks
     .filter(task => {
 
-        // Search Filter
-        const matchesSearch =
-            task.text.toLowerCase().includes(filter.toLowerCase());
+    // Search Filter
+    const matchesSearch =
+        task.text.toLowerCase().includes(filter.toLowerCase());
 
-        // Status Filter
-        const matchesStatus =
-            currentFilter === "all" ||
-            (currentFilter === "active" && !task.completed) ||
-            (currentFilter === "completed" && task.completed);
+    // Status Filter
+    const matchesStatus =
+        currentFilter === "all" ||
+        (currentFilter === "active" && !task.completed) ||
+        (currentFilter === "completed" && task.completed);
 
-        return matchesSearch && matchesStatus;
+    // Category Filter
+    const matchesCategory =
+        currentCategory === "all" ||
+        (task.category || "Personal") === currentCategory;
 
-    })
-        .sort((a, b) => {if (a.completed !== b.completed) {
-    return a.completed ? 1 : -1;
-}
+    return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesCategory
+    );
 
-            // Sort by Priority
-            const priorityDiff =
-                priorityOrder[a.priority || "Medium"] -
-                priorityOrder[b.priority || "Medium"];
+})
+        .sort((a, b) => {
 
-            if (priorityDiff !== 0) {
-                return priorityDiff;
-            }
+    // Always keep incomplete tasks above completed
+    if (a.completed !== b.completed) {
+        return a.completed ? 1 : -1;
+    }
 
-            // Sort by Due Date
+    switch(currentSort){
+
+        case "priority":
+
+            return priorityOrder[a.priority || "Medium"] -
+                   priorityOrder[b.priority || "Medium"];
+
+        case "duedate":
+
             if (!a.dueDate && !b.dueDate) return 0;
             if (!a.dueDate) return 1;
             if (!b.dueDate) return -1;
 
             return new Date(a.dueDate) - new Date(b.dueDate);
 
-        });
+        case "alphabet":
+
+            return a.text.localeCompare(b.text);
+
+        case "manual":
+
+default:
+
+    return a.order - b.order;
+
+    }
+
+});
 
     filteredTasks.forEach(task => {
 
         const actualIndex = tasks.indexOf(task);
 
         const li = document.createElement("li");
-        li.className = "task";
+li.className = "task";
+
+li.setAttribute("draggable", "true");
+li.dataset.index = actualIndex;
 
         if (task.completed) {
             li.classList.add("completed");
@@ -280,7 +315,7 @@ function renderTasks(filter = "") {
         `;
 
         // Complete Task
-        function toggleComplete(index){
+function toggleComplete(index){
 
     tasks[index].completed = !tasks[index].completed;
 
@@ -296,6 +331,15 @@ function renderTasks(filter = "") {
     renderTasks(searchTask.value);
 
 }
+
+// Complete Button
+li.querySelector(".complete-btn").addEventListener("click", () => {
+
+    toggleComplete(actualIndex);
+
+});
+
+
 
         // Edit Task
         li.querySelector(".edit-btn").addEventListener("click", () => {
@@ -342,6 +386,13 @@ window.undoTimer = setTimeout(()=>{
 
 },5000);
 });
+li.addEventListener("dragstart", handleDragStart);
+
+li.addEventListener("dragover", handleDragOver);
+
+li.addEventListener("drop", handleDrop);
+
+li.addEventListener("dragend", handleDragEnd);
 
         taskList.appendChild(li);
 
@@ -368,13 +419,14 @@ function addTask() {
     if (editIndex === -1) {
 
     // Add New Task
-    tasks.push({
-        text: text,
-        completed: false,
-        priority: priority.value,
-        category: category.value,
-        dueDate: dueDate.value
-    });
+   tasks.push({
+    text: text,
+    completed: false,
+    priority: priority.value,
+    category: category.value,
+    dueDate: dueDate.value,
+    order: Date.now()
+});
 
     showToast("✅ Task added successfully!", "success");
 
@@ -411,9 +463,11 @@ dueDate.value = "";
 const toast = document.getElementById("toast");
 const toastMessage = document.getElementById("toastMessage");
 const undoBtn = document.getElementById("undoBtn");
-
 let deletedTask = null;
 let deletedIndex = null;
+
+let draggedIndex = null;
+let dropIndex = null; 
 
 function showToast(message, type = "success") {
 
@@ -450,8 +504,23 @@ taskInput.addEventListener("keypress", (e) => {
 
 });
 
+
 // Search Tasks
 searchTask.addEventListener("keyup", () => {
+
+    renderTasks(searchTask.value);
+
+});
+sortBy.addEventListener("change", () => {
+
+    currentSort = sortBy.value;
+
+    renderTasks(searchTask.value);
+
+});
+categoryFilter.addEventListener("change", () => {
+
+    currentCategory = categoryFilter.value;
 
     renderTasks(searchTask.value);
 
@@ -500,6 +569,55 @@ undoBtn.addEventListener("click",()=>{
     deletedIndex=null;
 
 });
+function handleDragStart() {
+
+    draggedIndex = Number(this.dataset.index);
+
+    this.classList.add("dragging");
+
+}
+
+function handleDragOver(e) {
+
+    e.preventDefault();
+
+}
+
+function handleDrop() {
+
+    dropIndex = Number(this.dataset.index);
+
+    if (draggedIndex === dropIndex) return;
+
+    const draggedTask = tasks.find(task => tasks.indexOf(task) === draggedIndex);
+
+    const targetTask = tasks.find(task => tasks.indexOf(task) === dropIndex);
+
+    if (!draggedTask || !targetTask) return;
+
+    const temp = draggedTask.order;
+
+    draggedTask.order = targetTask.order;
+
+    targetTask.order = temp;
+
+    saveTasks();
+
+    renderTasks(searchTask.value);
+
+    showToast("📌 Task order updated", "success");
+
+}
+
+function handleDragEnd() {
+
+    document.querySelectorAll(".task").forEach(task => {
+
+        task.classList.remove("dragging");
+
+    });
+
+}
 
 // ==========================================
 // Initial Load

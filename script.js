@@ -581,6 +581,8 @@ function handleDragOver(e) {
 
     e.preventDefault();
 
+    this.classList.add("drag-over");
+
 }
 
 function handleDrop() {
@@ -589,23 +591,22 @@ function handleDrop() {
 
     if (draggedIndex === dropIndex) return;
 
-    const draggedTask = tasks.find(task => tasks.indexOf(task) === draggedIndex);
+    // Remove dragged task
+    const draggedTask = tasks.splice(draggedIndex, 1)[0];
 
-    const targetTask = tasks.find(task => tasks.indexOf(task) === dropIndex);
+    // Insert into new position
+    tasks.splice(dropIndex, 0, draggedTask);
 
-    if (!draggedTask || !targetTask) return;
-
-    const temp = draggedTask.order;
-
-    draggedTask.order = targetTask.order;
-
-    targetTask.order = temp;
+    // Reassign order values
+    tasks.forEach((task, index) => {
+        task.order = index;
+    });
 
     saveTasks();
 
     renderTasks(searchTask.value);
 
-    showToast("📌 Task order updated", "success");
+    showToast("📌 Task moved successfully!", "success");
 
 }
 
@@ -614,6 +615,8 @@ function handleDragEnd() {
     document.querySelectorAll(".task").forEach(task => {
 
         task.classList.remove("dragging");
+
+        task.classList.remove("drag-over");
 
     });
 

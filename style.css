@@ -1549,3 +1549,12 @@ gap:20px;
     transform: scale(.98);
 
 }
+.dragging{
+    opacity:0.5;
+}
+
+.drag-over{
+    border:2px dashed #4caf50;
+    transform:scale(1.02);
+    transition:.2s;
+}

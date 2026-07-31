@@ -242,8 +242,19 @@ default:
 
         const actualIndex = tasks.indexOf(task);
 
-        const li = document.createElement("li");
+const li = document.createElement("li");
+
 li.className = "task";
+
+// Check if task is overdue
+const isOverdue =
+    task.dueDate &&
+    !task.completed &&
+    new Date(task.dueDate) < new Date().setHours(0,0,0,0);
+
+if (isOverdue) {
+    li.classList.add("overdue");
+}
 
 li.setAttribute("draggable", "true");
 li.dataset.index = actualIndex;
@@ -287,13 +298,15 @@ li.dataset.index = actualIndex;
 
     <div class="due-date">
 
-        ${
-            task.dueDate
-                ? `📅 ${formatDate(task.dueDate)}`
-                : "⏳ No Deadline"
-        }
+    ${
+        isOverdue
+            ? `🔴 OVERDUE • ${formatDate(task.dueDate)}`
+            : task.dueDate
+            ? `📅 ${formatDate(task.dueDate)}`
+            : "⏳ No Deadline"
+    }
 
-    </div>
+</div>
 
 </div>
 

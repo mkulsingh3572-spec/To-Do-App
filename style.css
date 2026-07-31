@@ -1601,3 +1601,22 @@ gap:20px;
     background:#2980b9;
 
 }
+/* ===========================
+   Overdue Tasks
+=========================== */
+
+.task.overdue{
+
+    border:2px solid #e74c3c;
+
+    box-shadow:0 0 12px rgba(231,76,60,.25);
+
+}
+
+.task.overdue .due-date{
+
+    color:#e74c3c;
+
+    font-weight:700;
+
+}

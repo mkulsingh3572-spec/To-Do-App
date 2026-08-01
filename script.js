@@ -40,6 +40,13 @@ const importFile = document.getElementById("importFile");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressStatus = document.getElementById("progressStatus");
+const ctx = document.getElementById("taskChart");
+let taskChart;
+const categoryCtx = document.getElementById("categoryChart");
+let categoryChart;
+const weeklyCtx = document.getElementById("weeklyChart");
+
+let weeklyChart;
 
 // ---------- Current Date ----------
 const today = new Date();
@@ -89,59 +96,57 @@ function updateProgress() {
 
     progressFill.style.width = percentage + "%";
 
- if (percentage < 30) {
+    if (percentage < 30) {
 
-    // Red
-    progressFill.style.background = "#e74c3c";
-    progressText.style.color = "#e74c3c";
+        // Red
+        progressFill.style.background = "#e74c3c";
+        progressText.style.color = "#e74c3c";
 
-}
-else if (percentage < 70) {
+    }
+    else if (percentage < 70) {
 
-    // Orange
-    progressFill.style.background = "#f39c12";
-    progressText.style.color = "#f39c12";
+        // Orange
+        progressFill.style.background = "#f39c12";
+        progressText.style.color = "#f39c12";
 
-}
-else {
+    }
+    else {
 
-    // Green
-    progressFill.style.background = "#27ae60";
-    progressText.style.color = "#27ae60";
+        // Green
+        progressFill.style.background = "#27ae60";
+        progressText.style.color = "#27ae60";
 
-}
+    }
 
     progressText.textContent =
-    percentage === 100
-        ? "🎉 100%"
-        : percentage + "%";
+        percentage === 100
+            ? "🎉 100%"
+            : percentage + "%";
     progressStatus.textContent =
         `${completedTasks} of ${totalTasks} Tasks Completed`;
 
 }
-function updateStatistics(){
-
+function updateStatistics() {
     const total = tasks.length;
-
     const completed = tasks.filter(task => task.completed).length;
-
     const pending = total - completed;
-
+    const overdue = tasks.filter(task => {
+        if (task.completed || !task.dueDate) return false;
+        return new Date(task.dueDate) < new Date().setHours(0, 0, 0, 0);
+    }).length;
     const successRate =
         total === 0
             ? 0
             : Math.round((completed / total) * 100);
-
     document.getElementById("totalTasks").textContent = total;
-
     document.getElementById("completedTasks").textContent = completed;
-
     document.getElementById("pendingTasks").textContent = pending;
-
+    document.getElementById("overdueTasks").textContent = overdue;
     document.getElementById("completionRate").textContent =
         successRate + "%";
-
 }
+updateStreak();
+
 
 
 // ---------- Format Date ----------
@@ -153,6 +158,238 @@ function formatDate(date) {
         day: "2-digit",
         month: "short",
         year: "numeric"
+    });
+
+}
+function updateChart() {
+
+    const completed = tasks.filter(task => task.completed).length;
+    const pending = tasks.length - completed;
+
+    // Destroy old charts
+    if (taskChart) taskChart.destroy();
+    if (categoryChart) categoryChart.destroy();
+    if (weeklyChart) weeklyChart.destroy();
+
+    // =========================
+    // Completion Chart
+    // =========================
+
+    taskChart = new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: ["Completed", "Pending"],
+
+            datasets: [{
+
+                data: [completed, pending],
+
+                backgroundColor: [
+
+                    "#27ae60",
+                    "#f39c12"
+
+                ],
+
+                borderWidth: 0
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "65%",
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom",
+
+                    labels: {
+
+                        color: "#ffffff",
+                        padding: 15
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+    // =========================
+    // Category Chart
+    // =========================
+
+    const study =
+        tasks.filter(task => task.category === "Study").length;
+
+    const work =
+        tasks.filter(task => task.category === "Work").length;
+
+    const personal =
+        tasks.filter(task => task.category === "Personal").length;
+
+    const fitness =
+        tasks.filter(task => task.category === "Fitness").length;
+
+    categoryChart = new Chart(categoryCtx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Study",
+                "Work",
+                "Personal",
+                "Fitness"
+
+            ],
+
+            datasets: [{
+
+                data: [
+
+                    study,
+                    work,
+                    personal,
+                    fitness
+
+                ],
+
+                backgroundColor: [
+
+                    "#3498db",
+                    "#8e44ad",
+                    "#16a085",
+                    "#e67e22"
+
+                ],
+
+                borderWidth: 0
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "65%",
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom",
+
+                    labels: {
+
+                        color: "#ffffff",
+                        padding: 15
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+    const weekData =
+        JSON.parse(localStorage.getItem("weeklyStats")) ||
+        [0, 0, 0, 0, 0, 0, 0];
+
+    weeklyChart = new Chart(weeklyCtx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+
+            datasets: [{
+
+                label: "Tasks Completed",
+
+                data: weekData,
+
+                backgroundColor: "#ff7a18",
+
+                borderRadius: 8
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                }
+
+            },
+
+            scales: {
+
+                x: {
+
+                    ticks: {
+
+                        color: "#fff"
+
+                    },
+
+                    grid: {
+
+                        display: false
+
+                    }
+
+                },
+
+                y: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+
+                        color: "#fff"
+
+                    }
+
+                }
+
+            }
+
+        }
+
     });
 
 }
@@ -178,86 +415,88 @@ function renderTasks(filter = "") {
     };
 
     const filteredTasks = tasks
-    .filter(task => {
+        .filter(task => {
 
-    // Search Filter
-    const matchesSearch =
-        task.text.toLowerCase().includes(filter.toLowerCase());
+            // Search Filter
+            const matchesSearch =
+                task.text.toLowerCase().includes(filter.toLowerCase());
 
-    // Status Filter
-    const matchesStatus =
-        currentFilter === "all" ||
-        (currentFilter === "active" && !task.completed) ||
-        (currentFilter === "completed" && task.completed);
+            // Status Filter
+            const matchesStatus =
+                currentFilter === "all" ||
+                (currentFilter === "active" && !task.completed) ||
+                (currentFilter === "completed" && task.completed);
 
-    // Category Filter
-    const matchesCategory =
-        currentCategory === "all" ||
-        (task.category || "Personal") === currentCategory;
+            // Category Filter
+            const matchesCategory =
+                currentCategory === "all" ||
+                (task.category || "Personal") === currentCategory;
 
-    return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesCategory
-    );
+            return (
+                matchesSearch &&
+                matchesStatus &&
+                matchesCategory
+            );
 
-})
+        })
         .sort((a, b) => {
 
-    // Always keep incomplete tasks above completed
-    if (a.completed !== b.completed) {
-        return a.completed ? 1 : -1;
-    }
+            // Always keep incomplete tasks above completed
+            if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+            }
 
-    switch(currentSort){
+            switch (currentSort) {
 
-        case "priority":
+                case "priority":
 
-            return priorityOrder[a.priority || "Medium"] -
-                   priorityOrder[b.priority || "Medium"];
+                    return priorityOrder[a.priority || "Medium"] -
+                        priorityOrder[b.priority || "Medium"];
 
-        case "duedate":
+                case "duedate":
 
-            if (!a.dueDate && !b.dueDate) return 0;
-            if (!a.dueDate) return 1;
-            if (!b.dueDate) return -1;
+                    if (!a.dueDate && !b.dueDate) return 0;
+                    if (!a.dueDate) return 1;
+                    if (!b.dueDate) return -1;
 
-            return new Date(a.dueDate) - new Date(b.dueDate);
+                    return new Date(a.dueDate) - new Date(b.dueDate);
 
-        case "alphabet":
+                case "alphabet":
 
-            return a.text.localeCompare(b.text);
+                    return a.text.localeCompare(b.text);
 
-        case "manual":
+                case "manual":
 
-default:
+                default:
 
-    return a.order - b.order;
+                    return a.order - b.order;
 
-    }
+            }
 
-});
+        });
 
     filteredTasks.forEach(task => {
 
         const actualIndex = tasks.indexOf(task);
 
-const li = document.createElement("li");
+        const li = document.createElement("li");
 
-li.className = "task";
+        li.className = task.pinned
+            ? "task pinned"
+            : "task";
 
-// Check if task is overdue
-const isOverdue =
-    task.dueDate &&
-    !task.completed &&
-    new Date(task.dueDate) < new Date().setHours(0,0,0,0);
+        // Check if task is overdue
+        const isOverdue =
+            task.dueDate &&
+            !task.completed &&
+            new Date(task.dueDate) < new Date().setHours(0, 0, 0, 0);
 
-if (isOverdue) {
-    li.classList.add("overdue");
-}
+        if (isOverdue) {
+            li.classList.add("overdue");
+        }
 
-li.setAttribute("draggable", "true");
-li.dataset.index = actualIndex;
+        li.setAttribute("draggable", "true");
+        li.dataset.index = actualIndex;
 
         if (task.completed) {
             li.classList.add("completed");
@@ -272,39 +511,36 @@ li.dataset.index = actualIndex;
 
     <div class="category ${(task.category || "Personal").toLowerCase()}">
 
-        ${
-            task.category === "Study"
+        ${task.category === "Study"
                 ? "📚 STUDY"
                 : task.category === "Work"
-                ? "💼 WORK"
-                : task.category === "Fitness"
-                ? "🏋️ FITNESS"
-                : "🏠 PERSONAL"
-        }
+                    ? "💼 WORK"
+                    : task.category === "Fitness"
+                        ? "🏋️ FITNESS"
+                        : "🏠 PERSONAL"
+            }
 
     </div>
 
     <div class="priority ${(task.priority || "Medium").toLowerCase()}">
 
-        ${
-            task.priority === "High"
+        ${task.priority === "High"
                 ? "🔴 HIGH"
                 : task.priority === "Low"
-                ? "🟢 LOW"
-                : "🟡 MEDIUM"
-        }
+                    ? "🟢 LOW"
+                    : "🟡 MEDIUM"
+            }
 
     </div>
 
     <div class="due-date">
 
-    ${
-        isOverdue
-            ? `🔴 OVERDUE • ${formatDate(task.dueDate)}`
-            : task.dueDate
-            ? `📅 ${formatDate(task.dueDate)}`
-            : "⏳ No Deadline"
-    }
+    ${isOverdue
+                ? `🔴 OVERDUE • ${formatDate(task.dueDate)}`
+                : task.dueDate
+                    ? `📅 ${formatDate(task.dueDate)}`
+                    : "⏳ No Deadline"
+            }
 
 </div>
 
@@ -330,29 +566,61 @@ li.dataset.index = actualIndex;
         `;
 
         // Complete Task
-function toggleComplete(index){
+        function toggleComplete(index) {
 
-    tasks[index].completed = !tasks[index].completed;
+            tasks[index].completed = !tasks[index].completed;
+            if (tasks[index].completed) {
 
-    showToast(
-        tasks[index].completed
-            ? "✔️ Task completed!"
-            : "↩️ Task marked active!",
-        "success"
-    );
+                updateWeeklyStats();
 
-    saveTasks();
+            }
 
-    renderTasks(searchTask.value);
+            showToast(
+                tasks[index].completed
+                    ? "✔️ Task completed!"
+                    : "↩️ Task marked active!",
+                "success"
+            );
 
-}
+            saveTasks();
 
-// Complete Button
-li.querySelector(".complete-btn").addEventListener("click", () => {
+            updateChart();
 
-    toggleComplete(actualIndex);
+            renderTasks(searchTask.value);
+            function togglePin(index) {
 
-});
+                tasks[index].pinned = !tasks[index].pinned;
+
+                saveTasks();
+
+                renderTasks(searchTask.value);
+
+                showToast(
+                    tasks[index].pinned
+                        ? "📌 Task pinned!"
+                        : "📍 Task unpinned!",
+                    "info"
+                );
+
+            }
+
+        }
+        <button class="pin-btn" title="Pin Task">
+            <i class="fa-solid fa-thumbtack"></i>
+        </button>
+
+        // Complete Button
+        li.querySelector(".complete-btn").addEventListener("click", () => {
+
+            toggleComplete(actualIndex);
+
+        });
+        li.querySelector(".pin-btn").addEventListener("click", () => {
+
+            togglePin(actualIndex);
+
+        });
+
 
 
 
@@ -375,47 +643,48 @@ li.querySelector(".complete-btn").addEventListener("click", () => {
         // Delete Task
         li.querySelector(".delete-btn").addEventListener("click", () => {
 
-    deletedTask = tasks[actualIndex];
+            deletedTask = tasks[actualIndex];
 
-deletedIndex = actualIndex;
+            deletedIndex = actualIndex;
 
-tasks.splice(actualIndex,1);
+            tasks.splice(actualIndex, 1);
 
-undoBtn.style.display = "block";
+            undoBtn.style.display = "block";
 
-showToast("🗑️ Task deleted","error");
+            showToast("🗑️ Task deleted", "error");
 
-saveTasks();
+            saveTasks();
 
-renderTasks(searchTask.value);
+            renderTasks(searchTask.value);
 
-clearTimeout(window.undoTimer);
+            clearTimeout(window.undoTimer);
 
-window.undoTimer = setTimeout(()=>{
+            window.undoTimer = setTimeout(() => {
 
-    deletedTask = null;
+                deletedTask = null;
 
-    deletedIndex = null;
+                deletedIndex = null;
 
-    undoBtn.style.display = "none";
+                undoBtn.style.display = "none";
 
-},5000);
-});
-li.addEventListener("dragstart", handleDragStart);
+            }, 5000);
+        });
+        li.addEventListener("dragstart", handleDragStart);
 
-li.addEventListener("dragover", handleDragOver);
+        li.addEventListener("dragover", handleDragOver);
 
-li.addEventListener("drop", handleDrop);
+        li.addEventListener("drop", handleDrop);
 
-li.addEventListener("dragend", handleDragEnd);
+        li.addEventListener("dragend", handleDragEnd);
 
         taskList.appendChild(li);
 
     });
 
-   updateCounter();
-   updateProgress();
-   updateStatistics();
+    updateCounter();
+    updateProgress();
+    updateStatistics();
+    updateChart();
 
 }
 // ==========================================
@@ -423,48 +692,36 @@ li.addEventListener("dragend", handleDragEnd);
 // ==========================================
 
 function addTask() {
-
     const text = taskInput.value.trim();
-
     if (text === "") {
         showToast("⚠️ Please enter a task!", "warning");
         return;
     }
-
     if (editIndex === -1) {
-
-    // Add New Task
-   tasks.push({
-    text: text,
-    completed: false,
-    priority: priority.value,
-    category: category.value,
-    dueDate: dueDate.value,
-    order: Date.now()
-});
-
-    showToast("✅ Task added successfully!", "success");
-
-} else {
-
-    // Update Existing Task
-    tasks[editIndex].text = text;
-    tasks[editIndex].priority = priority.value;
-    tasks[editIndex].category = category.value;
-    tasks[editIndex].dueDate = dueDate.value;
-
-    showToast("✏️ Task updated!", "info");
-
-    editIndex = -1;
-
-}
-
+        // Add New Task
+        tasks.push({
+            text: text,
+            completed: false,
+            pinned: false,     // ← Add this line
+            priority: priority.value,
+            category: category.value,
+            dueDate: dueDate.value,
+            order: Date.now()
+        });
+        showToast("✅ Task added successfully!", "success");
+    } else {
+        // Update Existing Task
+        tasks[editIndex].text = text;
+        tasks[editIndex].priority = priority.value;
+        tasks[editIndex].category = category.value;
+        tasks[editIndex].dueDate = dueDate.value;
+        showToast("✏️ Task updated!", "info");
+        editIndex = -1;
+    }
     saveTasks();
-
     renderTasks(searchTask.value);
-
     // Reset Form
-       taskInput.value = "";
+    taskInput.value = "";
     priority.value = "Medium";
     category.value = "Personal";
     dueDate.value = "";
@@ -476,12 +733,12 @@ function addTask() {
 // Export Tasks
 // ==========================================
 
-function exportTasks(){
+function exportTasks() {
 
     const data = JSON.stringify(tasks, null, 2);
 
     const blob = new Blob([data], {
-        type:"application/json"
+        type: "application/json"
     });
 
     const url = URL.createObjectURL(blob);
@@ -503,29 +760,29 @@ function exportTasks(){
 // Import Tasks
 // ==========================================
 
-function importTasks(event){
+function importTasks(event) {
 
     const file = event.target.files[0];
 
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = function(e){
+    reader.onload = function (e) {
 
-        try{
+        try {
 
             const importedTasks = JSON.parse(e.target.result);
 
-            if(!Array.isArray(importedTasks)){
+            if (!Array.isArray(importedTasks)) {
                 throw new Error();
             }
 
-           if (!confirm("Importing will replace all current tasks. Continue?")) {
-    return;
-}
+            if (!confirm("Importing will replace all current tasks. Continue?")) {
+                return;
+            }
 
-tasks = importedTasks;
+            tasks = importedTasks;
 
             saveTasks();
 
@@ -536,7 +793,7 @@ tasks = importedTasks;
 
         }
 
-        catch{
+        catch {
 
             showToast("❌ Invalid JSON file!", "error");
 
@@ -559,7 +816,7 @@ let deletedTask = null;
 let deletedIndex = null;
 
 let draggedIndex = null;
-let dropIndex = null; 
+let dropIndex = null;
 
 function showToast(message, type = "success") {
 
@@ -646,23 +903,23 @@ filterButtons.forEach(button => {
     });
 
 });
-undoBtn.addEventListener("click",()=>{
+undoBtn.addEventListener("click", () => {
 
-    if(deletedTask===null) return;
+    if (deletedTask === null) return;
 
-    tasks.splice(deletedIndex,0,deletedTask);
+    tasks.splice(deletedIndex, 0, deletedTask);
 
     saveTasks();
 
     renderTasks(searchTask.value);
 
-    showToast("↩️ Task restored!","success");
+    showToast("↩️ Task restored!", "success");
 
-    undoBtn.style.display="none";
+    undoBtn.style.display = "none";
 
-    deletedTask=null;
+    deletedTask = null;
 
-    deletedIndex=null;
+    deletedIndex = null;
 
 });
 function handleDragStart() {
@@ -735,5 +992,35 @@ themeBtn.addEventListener("click", () => {
         "theme",
         darkMode ? "dark" : "light"
     );
+    `   `
+});
+tasks.sort((a, b) => {
+
+    if (a.pinned === b.pinned) return 0;
+
+    return a.pinned ? -1 : 1;
 
 });
+function updateWeeklyStats() {
+
+    let weeklyStats =
+        JSON.parse(localStorage.getItem("weeklyStats")) ||
+        [0, 0, 0, 0, 0, 0, 0];
+    const today = new Date().getDay();
+    const index = (today + 6) % 7;
+    weeklyStats[index]++;
+    localStorage.setItem(
+        "weeklyStats",
+        JSON.stringify(weeklyStats)
+    );
+    function updateStreak() {
+        const streak = localStorage.getItem("currentStreak") || 0;
+        document.getElementById("currentStreak").textContent = streak;
+
+    }
+
+}
+function updateStreak() {
+    const streak = localStorage.getItem("currentStreak") || 0;
+    document.getElementById("currentStreak").textContent = streak;
+}

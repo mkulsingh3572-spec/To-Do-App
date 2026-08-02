@@ -4,20 +4,33 @@
 // ==========================================
 
 // ---------- Elements ----------
+
 const themeBtn = document.getElementById("themeBtn");
+
 let darkMode = localStorage.getItem("theme") === "dark";
-if (darkMode) {
 
-    document.body.classList.add("dark-theme");
+function applyTheme() {
 
-    themeBtn.textContent = "☀️";
+    if (darkMode) {
+        document.body.classList.add("dark-theme");
+        themeBtn.textContent = "☀️";
+    } else {
+        document.body.classList.remove("dark-theme");
+        themeBtn.textContent = "🌙";
+    }
 
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
 }
-else {
 
-    themeBtn.textContent = "🌙";
+applyTheme();
 
-}
+themeBtn.addEventListener("click", () => {
+
+    darkMode = !darkMode;
+
+    applyTheme();
+
+});
 const taskInput = document.getElementById("taskInput");
 const priority = document.getElementById("priority");
 const category = document.getElementById("category");
@@ -145,7 +158,7 @@ function updateStatistics() {
     document.getElementById("completionRate").textContent =
         successRate + "%";
 }
-updateStreak();
+
 
 
 
@@ -161,6 +174,22 @@ function formatDate(date) {
     });
 
 }
+// Complete Task
+function toggleComplete(index) {
+    if (!tasks[index].completed) {
+        updateWeeklyStats();
+    }
+    tasks[index].completed = !tasks[index].completed;
+    showToast(
+        tasks[index].completed
+            ? "✔️ Task completed!"
+            : "↩️ Task marked active!",
+        "success"
+    );
+    saveTasks();
+    updateChart();
+    renderTasks(searchTask.value);
+}
 function updateChart() {
 
     const completed = tasks.filter(task => task.completed).length;
@@ -174,6 +203,9 @@ function updateChart() {
     // =========================
     // Completion Chart
     // =========================
+    console.log(ctx);
+    console.log(categoryCtx);
+    console.log(weeklyCtx);
 
     taskChart = new Chart(ctx, {
 
@@ -440,6 +472,10 @@ function renderTasks(filter = "") {
 
         })
         .sort((a, b) => {
+            // 📌 Pinned tasks always first
+            if (a.pinned !== b.pinned) {
+                return b.pinned - a.pinned;
+            }
 
             // Always keep incomplete tasks above completed
             if (a.completed !== b.completed) {
@@ -475,6 +511,7 @@ function renderTasks(filter = "") {
 
         });
 
+
     filteredTasks.forEach(task => {
 
         const actualIndex = tasks.indexOf(task);
@@ -505,10 +542,14 @@ function renderTasks(filter = "") {
         li.innerHTML = `
             <div class="task-content">
 
-                <span>${task.text}</span>
+    ${task.pinned
+        ? `<span class="pinned-label">
+              📌 PINNED
+           </span>`
+        : ""}
 
+    <span>${task.text}</span>
                 <div class="task-info">
-
     <div class="category ${(task.category || "Personal").toLowerCase()}">
 
         ${task.category === "Study"
@@ -548,7 +589,9 @@ function renderTasks(filter = "") {
 
             </div>
 
-            <div class="task-buttons">
+            <button class="pin-btn ${task.pinned ? "active-pin" : ""}" title="Pin Task">
+            <i class="fa-solid fa-thumbtack"></i>
+            </button>
 
                 <button class="complete-btn" title="Complete Task">
                     <i class="fa-solid fa-check"></i>
@@ -565,49 +608,6 @@ function renderTasks(filter = "") {
             </div>
         `;
 
-        // Complete Task
-        function toggleComplete(index) {
-
-            tasks[index].completed = !tasks[index].completed;
-            if (tasks[index].completed) {
-
-                updateWeeklyStats();
-
-            }
-
-            showToast(
-                tasks[index].completed
-                    ? "✔️ Task completed!"
-                    : "↩️ Task marked active!",
-                "success"
-            );
-
-            saveTasks();
-
-            updateChart();
-
-            renderTasks(searchTask.value);
-            function togglePin(index) {
-
-                tasks[index].pinned = !tasks[index].pinned;
-
-                saveTasks();
-
-                renderTasks(searchTask.value);
-
-                showToast(
-                    tasks[index].pinned
-                        ? "📌 Task pinned!"
-                        : "📍 Task unpinned!",
-                    "info"
-                );
-
-            }
-
-        }
-        <button class="pin-btn" title="Pin Task">
-            <i class="fa-solid fa-thumbtack"></i>
-        </button>
 
         // Complete Button
         li.querySelector(".complete-btn").addEventListener("click", () => {
@@ -980,27 +980,7 @@ function handleDragEnd() {
 // ==========================================
 
 renderTasks();
-themeBtn.addEventListener("click", () => {
-
-    darkMode = !darkMode;
-
-    document.body.classList.toggle("dark-theme");
-
-    themeBtn.textContent = darkMode ? "☀️" : "🌙";
-
-    localStorage.setItem(
-        "theme",
-        darkMode ? "dark" : "light"
-    );
-    `   `
-});
-tasks.sort((a, b) => {
-
-    if (a.pinned === b.pinned) return 0;
-
-    return a.pinned ? -1 : 1;
-
-});
+updateStreak();
 function updateWeeklyStats() {
 
     let weeklyStats =
@@ -1013,12 +993,6 @@ function updateWeeklyStats() {
         "weeklyStats",
         JSON.stringify(weeklyStats)
     );
-    function updateStreak() {
-        const streak = localStorage.getItem("currentStreak") || 0;
-        document.getElementById("currentStreak").textContent = streak;
-
-    }
-
 }
 function updateStreak() {
     const streak = localStorage.getItem("currentStreak") || 0;

@@ -1802,14 +1802,39 @@ border-radius:10px;
     margin-top:25px;
 
 }
-.task.pinned{
-
-    border-left:5px solid #f39c12;
-
-    background:rgba(243,156,18,.08);
-
+.pin-btn{
+    background:none;
+    border:none;
+    cursor:pointer;
+    font-size:18px;
+    color:#cfd8dc;
+    transition:.3s;
 }
+
+.pin-btn:hover{
+    color:#ff9800;
+}
+
+.pin-btn.active-pin i{
+    color:#ff9800;
+    transform:rotate(45deg);
+}
+
+.pin-btn i{
+    transition:.3s;
+}
+
 .task.pinned{
-    border-left:5px solid #f39c12;
-    background:rgba(243,156,18,.08);
+    border-left:6px solid gold;
+}
+.pinned-label{
+    display:inline-block;
+    margin-bottom:8px;
+    padding:4px 10px;
+    background:#ff9800;
+    color:#fff;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.5px;
 }

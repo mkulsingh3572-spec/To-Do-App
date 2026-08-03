@@ -1,7 +1,12 @@
-// ==========================================
-// Mukul's To-Do App
-// script.js
-// ==========================================
+/* ===========================================================
+   Mukul's Professional To-Do App
+   Author : Mukul Anand
+   Version: 2.0
+   Description:
+   A modern task management application featuring analytics,
+   drag & drop, charts, pinning, import/export, streak tracking,
+   and productivity insights.
+=========================================================== */
 
 // ---------- Elements ----------
 
@@ -425,9 +430,7 @@ function updateChart() {
     });
 
 }
-// ==========================================
 // Render Tasks
-// ==========================================
 
 function renderTasks(filter = "") {
 

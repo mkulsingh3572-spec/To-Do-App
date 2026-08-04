@@ -289,9 +289,9 @@ header h1 {
 
     background: var(--card-color);
 
-    border-radius: 22px;
+    border-radius: 12px;
 
-    padding: 35px;
+    padding: 26px;
 
     box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
 
@@ -325,7 +325,7 @@ header h1 {
 
     outline: none;
 
-    border-radius: 12px;
+    border-radius: 8px;
 
     background: var(--input-bg);
 
@@ -353,7 +353,7 @@ header h1 {
 
     outline: none;
 
-    border-radius: 12px;
+    border-radius: 8px;
 
     background: var(--input-bg);
 
@@ -385,7 +385,7 @@ header h1 {
 
     border: none;
 
-    border-radius: 12px;
+    border-radius: 8px;
 
     background: var(--primary);
 
@@ -430,7 +430,7 @@ header h1 {
 
     outline: none;
 
-    border-radius: 12px;
+    border-radius: 8px;
 
     background: var(--input-bg);
 
@@ -470,7 +470,7 @@ header h1 {
 
     padding: 12px;
 
-    border-radius: 10px;
+    border-radius: 8px;
 
     background: var(--input-bg);
 
@@ -597,7 +597,7 @@ header h1 {
 
     background: var(--task-bg);
 
-    border-radius: 14px;
+    border-radius: 10px;
 
     animation: fadeIn .3s ease;
 
@@ -1364,7 +1364,7 @@ header h1 {
 
     padding: 16px 22px;
 
-    border-radius: 14px;
+    border-radius: 8px;
 
     color: #fff;
 
@@ -1478,7 +1478,7 @@ header h1 {
 
     .stat-card {
 
-        padding: 18px;
+        padding: 10px;
 
     }
 
@@ -1506,9 +1506,9 @@ header h1 {
 
    grid-template-columns: repeat(6, 1fr);
 
-    gap: 18px;
+    gap: 14px;
 
-    margin: 30px 0;
+    margin: 22px 0;
 
 }
 
@@ -1520,7 +1520,7 @@ header h1 {
 
     border-radius: 18px;
 
-    padding: 24px;
+    padding: 18px;
 
     text-align: center;
 
@@ -1542,7 +1542,7 @@ header h1 {
 
 .stat-icon {
 
-    font-size: 36px;
+    font-size: 30px;
 
     margin-bottom: 10px;
 
@@ -1550,7 +1550,7 @@ header h1 {
 
 .stat-card h2 {
 
-    font-size: 34px;
+    font-size: 30px;
 
     margin: 8px 0;
 
@@ -1686,7 +1686,7 @@ max-height:320px;
 .chart-box{
     background:var(--card-color);
     padding:24px;
-    border-radius:18px;
+    border-radius:10px;
     height:320px;
     box-shadow:0 10px 25px rgba(0,0,0,.15);
     display:flex;
@@ -1732,7 +1732,7 @@ color: var(--text-color);
 
     background:var(--card-color);
 
-    border-radius:18px;
+    border-radius:10px;
 
     padding:25px;
 
@@ -1765,7 +1765,7 @@ font-weight:700;
 
 color:#fff;
 
-margin:35px 0 18px;
+margin:26px 0 14px;
 
 display:flex;
 

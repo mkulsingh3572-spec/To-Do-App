@@ -92,6 +92,10 @@ let currentCategory = "all";
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+function refreshUI() {
+    renderTasks(searchTask.value);
+    updateChart();
+}
 
 // ---------- Counter ----------
 function updateCounter() {
@@ -192,8 +196,7 @@ function toggleComplete(index) {
         "success"
     );
     saveTasks();
-    updateChart();
-    renderTasks(searchTask.value);
+    refreshUI();
 }
 function updateChart() {
 
@@ -546,10 +549,10 @@ function renderTasks(filter = "") {
             <div class="task-content">
 
     ${task.pinned
-        ? `<span class="pinned-label">
+                ? `<span class="pinned-label">
               📌 PINNED
            </span>`
-        : ""}
+                : ""}
 
     <span>${task.text}</span>
                 <div class="task-info">
@@ -657,8 +660,7 @@ function renderTasks(filter = "") {
             showToast("🗑️ Task deleted", "error");
 
             saveTasks();
-
-            renderTasks(searchTask.value);
+            refreshUI();
 
             clearTimeout(window.undoTimer);
 
@@ -687,7 +689,6 @@ function renderTasks(filter = "") {
     updateCounter();
     updateProgress();
     updateStatistics();
-    updateChart();
 
 }
 // ==========================================
@@ -722,7 +723,7 @@ function addTask() {
         editIndex = -1;
     }
     saveTasks();
-    renderTasks(searchTask.value);
+    refreshUI();
     // Reset Form
     taskInput.value = "";
     priority.value = "Medium";
@@ -786,11 +787,8 @@ function importTasks(event) {
             }
 
             tasks = importedTasks;
-
-            saveTasks();
-
-            renderTasks(searchTask.value);
-
+saveTasks();
+refreshUI();
             showToast("📥 Tasks imported successfully!", "success");
             importFile.value = "";
 
@@ -913,8 +911,7 @@ undoBtn.addEventListener("click", () => {
     tasks.splice(deletedIndex, 0, deletedTask);
 
     saveTasks();
-
-    renderTasks(searchTask.value);
+refreshUI();
 
     showToast("↩️ Task restored!", "success");
 
@@ -959,8 +956,7 @@ function handleDrop() {
     });
 
     saveTasks();
-
-    renderTasks(searchTask.value);
+refreshUI();
 
     showToast("📌 Task moved successfully!", "success");
 
@@ -983,6 +979,7 @@ function handleDragEnd() {
 // ==========================================
 
 renderTasks();
+updateChart();
 updateStreak();
 function updateWeeklyStats() {
 

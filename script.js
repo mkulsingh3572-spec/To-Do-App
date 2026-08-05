@@ -595,23 +595,27 @@ function renderTasks(filter = "") {
 
             </div>
 
-            <button class="pin-btn ${task.pinned ? "active-pin" : ""}" title="Pin Task">
-            <i class="fa-solid fa-thumbtack"></i>
-            </button>
+            <div class="task-buttons">
 
-                <button class="complete-btn" title="Complete Task">
-                    <i class="fa-solid fa-check"></i>
-                </button>
+    <button class="pin-btn ${task.pinned ? "active-pin" : ""}" title="Pin Task">
+        <i class="fa-solid fa-thumbtack"></i>
+    </button>
 
-                <button class="edit-btn" title="Edit Task">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
+    <button class="complete-btn" title="Complete Task">
+        <i class="fa-solid fa-check"></i>
+    </button>
 
-                <button class="delete-btn" title="Delete Task">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+    <button class="edit-btn" title="Edit Task">
+        <i class="fa-solid fa-pen"></i>
+    </button>
 
-            </div>
+    <button class="delete-btn" title="Delete Task">
+        <i class="fa-solid fa-trash"></i>
+    </button>
+
+</div>
+
+</div>
         `;
 
 
@@ -787,8 +791,8 @@ function importTasks(event) {
             }
 
             tasks = importedTasks;
-saveTasks();
-refreshUI();
+            saveTasks();
+            refreshUI();
             showToast("📥 Tasks imported successfully!", "success");
             importFile.value = "";
 
@@ -911,7 +915,7 @@ undoBtn.addEventListener("click", () => {
     tasks.splice(deletedIndex, 0, deletedTask);
 
     saveTasks();
-refreshUI();
+    refreshUI();
 
     showToast("↩️ Task restored!", "success");
 
@@ -956,7 +960,7 @@ function handleDrop() {
     });
 
     saveTasks();
-refreshUI();
+    refreshUI();
 
     showToast("📌 Task moved successfully!", "success");
 

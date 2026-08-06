@@ -31,13 +31,6 @@ const importFile = document.getElementById("importFile");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressStatus = document.getElementById("progressStatus");
-const ctx = document.getElementById("taskChart");
-let taskChart;
-const categoryCtx = document.getElementById("categoryChart");
-let categoryChart;
-const weeklyCtx = document.getElementById("weeklyChart");
-
-let weeklyChart;
 
 // ---------- Current Date ----------
 const today = new Date();
@@ -56,20 +49,9 @@ tasks.forEach((task, index) => {
         task.order = index;
     }
 });
-
 let editIndex = -1;
 let currentFilter = "all";
 let currentCategory = "all";
-
-// ---------- Save ----------
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-function refreshUI() {
-    renderTasks(searchTask.value);
-    updateChart();
-}
-
 // ---------- Counter ----------
 function updateCounter() {
     taskCount.textContent = tasks.length;
@@ -140,393 +122,106 @@ function updateStatistics() {
     document.getElementById("completionRate").textContent =
         successRate + "%";
 }
-
-
-
-
-// ---------- Format Date ----------
-function formatDate(date) {
-
-    if (!date) return "No Deadline";
-
-    return new Date(date).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-    });
-
-}
 // Complete Task
 function toggleComplete(index) {
-    if (!tasks[index].completed) {
-        updateWeeklyStats();
-    }
-    tasks[index].completed = !tasks[index].completed;
+    const isCompleting = !tasks[index].completed;
+    updateWeeklyStats(isCompleting);
+    tasks[index].completed = isCompleting;
     showToast(
-        tasks[index].completed
+        isCompleting
             ? "✔️ Task completed!"
             : "↩️ Task marked active!",
         "success"
     );
-    saveTasks();
-    refreshUI();
-}
-function updateChart() {
-
-    const completed = tasks.filter(task => task.completed).length;
-    const pending = tasks.length - completed;
-
-    // Destroy old charts
-    if (taskChart) taskChart.destroy();
-    if (categoryChart) categoryChart.destroy();
-    if (weeklyChart) weeklyChart.destroy();
-
-    // =========================
-    // Completion Chart
-    // =========================
-    console.log(ctx);
-    console.log(categoryCtx);
-    console.log(weeklyCtx);
-
-    taskChart = new Chart(ctx, {
-
-        type: "doughnut",
-
-        data: {
-
-            labels: ["Completed", "Pending"],
-
-            datasets: [{
-
-                data: [completed, pending],
-
-                backgroundColor: [
-
-                    "#27ae60",
-                    "#f39c12"
-
-                ],
-
-                borderWidth: 0
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            cutout: "65%",
-
-            plugins: {
-
-                legend: {
-
-                    position: "bottom",
-
-                    labels: {
-
-                        color: "#ffffff",
-                        padding: 15
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
-    // =========================
-    // Category Chart
-    // =========================
-
-    const study =
-        tasks.filter(task => task.category === "Study").length;
-
-    const work =
-        tasks.filter(task => task.category === "Work").length;
-
-    const personal =
-        tasks.filter(task => task.category === "Personal").length;
-
-    const fitness =
-        tasks.filter(task => task.category === "Fitness").length;
-
-    categoryChart = new Chart(categoryCtx, {
-
-        type: "doughnut",
-
-        data: {
-
-            labels: [
-
-                "Study",
-                "Work",
-                "Personal",
-                "Fitness"
-
-            ],
-
-            datasets: [{
-
-                data: [
-
-                    study,
-                    work,
-                    personal,
-                    fitness
-
-                ],
-
-                backgroundColor: [
-
-                    "#3498db",
-                    "#8e44ad",
-                    "#16a085",
-                    "#e67e22"
-
-                ],
-
-                borderWidth: 0
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            cutout: "65%",
-
-            plugins: {
-
-                legend: {
-
-                    position: "bottom",
-
-                    labels: {
-
-                        color: "#ffffff",
-                        padding: 15
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-    const weekData =
-        JSON.parse(localStorage.getItem("weeklyStats")) ||
-        [0, 0, 0, 0, 0, 0, 0];
-
-    weeklyChart = new Chart(weeklyCtx, {
-
-        type: "bar",
-
-        data: {
-
-            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-
-            datasets: [{
-
-                label: "Tasks Completed",
-
-                data: weekData,
-
-                backgroundColor: "#ff7a18",
-
-                borderRadius: 8
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
-
-            },
-
-            scales: {
-
-                x: {
-
-                    ticks: {
-
-                        color: "#fff"
-
-                    },
-
-                    grid: {
-
-                        display: false
-
-                    }
-
-                },
-
-                y: {
-
-                    beginAtZero: true,
-
-                    ticks: {
-
-                        color: "#fff"
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
+    refreshUI(true);
 }
 // Render Tasks
 
 function renderTasks(filter = "") {
-
     taskList.innerHTML = "";
-
     // Show / Hide Search Box
     if (tasks.length === 0) {
         searchSection.style.display = "none";
     } else {
         searchSection.style.display = "block";
     }
-
     const priorityOrder = {
         High: 1,
         Medium: 2,
         Low: 3
     };
-
     const filteredTasks = tasks
         .filter(task => {
-
             // Search Filter
             const matchesSearch =
                 task.text.toLowerCase().includes(filter.toLowerCase());
-
             // Status Filter
             const matchesStatus =
                 currentFilter === "all" ||
                 (currentFilter === "active" && !task.completed) ||
                 (currentFilter === "completed" && task.completed);
-
             // Category Filter
             const matchesCategory =
                 currentCategory === "all" ||
                 (task.category || "Personal") === currentCategory;
-
             return (
                 matchesSearch &&
                 matchesStatus &&
                 matchesCategory
             );
-
         })
         .sort((a, b) => {
             // 📌 Pinned tasks always first
-            if (a.pinned !== b.pinned) {
-                return b.pinned - a.pinned;
-            }
-
-            // Always keep incomplete tasks above completed
+            // Active tasks always above completed tasks
             if (a.completed !== b.completed) {
                 return a.completed ? 1 : -1;
             }
-
+            // Within the same group, pinned tasks first
+            if (a.pinned !== b.pinned) {
+                return b.pinned - a.pinned;
+            }
             switch (currentSort) {
-
                 case "priority":
-
                     return priorityOrder[a.priority || "Medium"] -
                         priorityOrder[b.priority || "Medium"];
-
                 case "duedate":
-
                     if (!a.dueDate && !b.dueDate) return 0;
                     if (!a.dueDate) return 1;
                     if (!b.dueDate) return -1;
-
                     return new Date(a.dueDate) - new Date(b.dueDate);
-
                 case "alphabet":
-
                     return a.text.localeCompare(b.text);
-
                 case "manual":
-
                 default:
-
                     return a.order - b.order;
-
             }
-
         });
 
-
     filteredTasks.forEach(task => {
-
         const actualIndex = tasks.indexOf(task);
-
         const li = document.createElement("li");
-
         li.className = task.pinned
             ? "task pinned"
             : "task";
-
         // Check if task is overdue
         const isOverdue =
             task.dueDate &&
             !task.completed &&
             new Date(task.dueDate) < new Date().setHours(0, 0, 0, 0);
-
         if (isOverdue) {
             li.classList.add("overdue");
         }
-
         li.setAttribute("draggable", "true");
         li.dataset.index = actualIndex;
-
         if (task.completed) {
             li.classList.add("completed");
         }
-
         li.innerHTML = `
             <div class="task-content">
-
     ${task.pinned ? `<i class="fa-solid fa-thumbtack pinned-icon"></i>` : ""}
-
     <h4 class="task-title">${task.text}</h4>
                 <div class="task-info">
     <div class="category ${(task.category || "Personal").toLowerCase()}">
-
         ${task.category === "Study"
                 ? "📚 STUDY"
                 : task.category === "Work"
@@ -535,31 +230,23 @@ function renderTasks(filter = "") {
                         ? "🏋️ FITNESS"
                         : "🏠 PERSONAL"
             }
-
     </div>
-
     <div class="priority ${(task.priority || "Medium").toLowerCase()}">
-
         ${task.priority === "High"
                 ? "🔴 HIGH"
                 : task.priority === "Low"
                     ? "🟢 LOW"
                     : "🟡 MEDIUM"
             }
-
     </div>
-
     <div class="due-date">
-
     ${isOverdue
                 ? `🔴 OVERDUE • ${formatDate(task.dueDate)}`
                 : task.dueDate
                     ? `📅 ${formatDate(task.dueDate)}`
                     : "⏳ No Deadline"
             }
-
 </div>
-
 </div>
 
             </div>
@@ -632,8 +319,7 @@ function renderTasks(filter = "") {
 
             showToast("🗑️ Task deleted", "error");
 
-            saveTasks();
-            refreshUI();
+            refreshUI(true);
 
             clearTimeout(window.undoTimer);
 
@@ -695,8 +381,7 @@ function addTask() {
         showToast("✏️ Task updated!", "info");
         editIndex = -1;
     }
-    saveTasks();
-    refreshUI();
+    refreshUI(true);
     // Reset Form
     taskInput.value = "";
     priority.value = "Medium";
@@ -760,8 +445,8 @@ function importTasks(event) {
             }
 
             tasks = importedTasks;
-            saveTasks();
-            refreshUI();
+
+            refreshUI(true);
             showToast("📥 Tasks imported successfully!", "success");
             importFile.value = "";
 
@@ -791,26 +476,6 @@ let deletedIndex = null;
 
 let draggedIndex = null;
 let dropIndex = null;
-
-function showToast(message, type = "success") {
-
-    toastMessage.textContent = message;
-
-    toast.className = "";
-
-    toast.classList.add(type);
-
-    toast.classList.add("show");
-
-    clearTimeout(showToast.timer);
-
-    showToast.timer = setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 2500);
-
-}
 // ==========================================
 // Event Listeners
 // ==========================================
@@ -883,8 +548,7 @@ undoBtn.addEventListener("click", () => {
 
     tasks.splice(deletedIndex, 0, deletedTask);
 
-    saveTasks();
-    refreshUI();
+    refreshUI(true);
 
     showToast("↩️ Task restored!", "success");
 
@@ -927,9 +591,7 @@ function handleDrop() {
     tasks.forEach((task, index) => {
         task.order = index;
     });
-
-    saveTasks();
-    refreshUI();
+    refreshUI(true);
 
     showToast("📌 Task moved successfully!", "success");
 
@@ -954,14 +616,21 @@ function handleDragEnd() {
 renderTasks();
 updateChart();
 updateStreak();
-function updateWeeklyStats() {
 
+function updateWeeklyStats(isCompleted = true) {
     let weeklyStats =
         JSON.parse(localStorage.getItem("weeklyStats")) ||
         [0, 0, 0, 0, 0, 0, 0];
+
     const today = new Date().getDay();
     const index = (today + 6) % 7;
-    weeklyStats[index]++;
+    console.log("Before:", weeklyStats[index]);
+    if (isCompleted) {
+        weeklyStats[index]++;
+    } else {
+        weeklyStats[index] = Math.max(0, weeklyStats[index] - 1);
+    }
+    console.log("After:", weeklyStats[index]);
     localStorage.setItem(
         "weeklyStats",
         JSON.stringify(weeklyStats)

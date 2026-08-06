@@ -1,12 +1,20 @@
 const ctx = document.getElementById("taskChart");
 const categoryCtx = document.getElementById("categoryChart");
 const weeklyCtx = document.getElementById("weeklyChart");
+
+function getChartTextColor() {
+    return getComputedStyle(document.documentElement)
+        .getPropertyValue("--chart-text")
+        .trim();
+}
+
 let taskChart;
 let categoryChart;
 let weeklyChart;
 function updateChart() {
     const completed = tasks.filter(task => task.completed).length;
     const pending = tasks.length - completed;
+    const chartTextColor = getChartTextColor();
     // Destroy old charts
     if (taskChart) taskChart.destroy();
     if (categoryChart) categoryChart.destroy();
@@ -35,7 +43,7 @@ function updateChart() {
                 legend: {
                     position: "bottom",
                     labels: {
-                        color: "#ffffff",
+                        color: chartTextColor,
                         padding: 15
                     }
                 }
@@ -86,7 +94,7 @@ function updateChart() {
                 legend: {
                     position: "bottom",
                     labels: {
-                        color: "#ffffff",
+                        color: chartTextColor,
                         padding: 15
                     }
                 }
@@ -118,7 +126,7 @@ function updateChart() {
             scales: {
                 x: {
                     ticks: {
-                        color: "#fff"
+                        color: chartTextColor
                     },
                     grid: {
                         display: false
@@ -127,7 +135,7 @@ function updateChart() {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: "#fff"
+                        color: chartTextColor
                     }
                 }
             }

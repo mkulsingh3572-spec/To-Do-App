@@ -6,26 +6,17 @@
     /* Light Theme */
 
     --bg-gradient: #f3f4f6;
-
     --card-color: #ffffff;
-
     --input-bg: #f3f4f6;
-
     --task-bg: #f8fafc;
-
     --text-color: #1f2937;
-
     --subtitle-color: #6b7280;
-
     --progress-bg: #e5e7eb;
     --card-border: #e5e7eb;
-
+    --chart-text:#374151;
     --primary: #ff7a18;
-
     --primary-hover: #ff6200;
-
     --success: #27ae60;
-
     --danger: #e74c3c;
 
 }
@@ -920,22 +911,15 @@ header h1 {
 ========================================== */
 
 .dark-theme {
-
     --bg-gradient: linear-gradient(135deg, #111827, #1f2937);
-
     --card-color: #1e293b;
-
     --input-bg: #334155;
-
     --task-bg: #2f3a4d;
-
     --text-color: #ffffff;
-
     --subtitle-color: #cbd5e1;
-
     --progress-bg: #475569;
     --card-border: rgba(255, 255, 255, .08);
-
+    --chart-text:#ffffff;
 }
 
 

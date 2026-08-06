@@ -3,19 +3,22 @@
 ========================== */
 :root {
 
-    --bg-gradient: linear-gradient(135deg, #071428, #0f3057);
+    /* Light Theme */
+
+    --bg-gradient: #f3f4f6;
 
     --card-color: #ffffff;
 
-    --input-bg: #eef3ff;
+    --input-bg: #f3f4f6;
 
-    --task-bg: #eef3ff;
+    --task-bg: #f8fafc;
 
-    --text-color: #1e1e1e;
+    --text-color: #1f2937;
 
-    --subtitle-color: #c9d6f3;
+    --subtitle-color: #6b7280;
 
-    --progress-bg: #dfe6ff;
+    --progress-bg: #e5e7eb;
+    --card-border: #e5e7eb;
 
     --primary: #ff7a18;
 
@@ -65,9 +68,9 @@ body {
    Main Container
 ========================== */
 
-.container{
-    max-width:1200px;
-    margin:auto;
+.container {
+    max-width: 1200px;
+    margin: auto;
 }
 
 /* ==========================
@@ -100,8 +103,7 @@ header {
 }
 
 header h1 {
-
-    color: #fff;
+    color: var(--text-color);
 
     font-size: 52px;
 
@@ -125,7 +127,7 @@ header h1 {
 
     line-height: 1.5;
 
-    color: #d5dff0;
+    color: var(--subtitle-color);
 
 }
 
@@ -179,7 +181,7 @@ header h1 {
 
 #currentDate {
 
-    color: #d9e6ff;
+    color: var(--text-color);
 
     font-size: 22px;
 
@@ -223,7 +225,7 @@ header h1 {
 
     margin-bottom: 10px;
 
-    color: #ffffff;
+    color: var(--text-color);
 
     font-size: 22px;
 
@@ -273,7 +275,7 @@ header h1 {
 
     margin-top: 12px;
 
-    color: #ffffff;
+  color: var(--text-color);
 
     font-size: 18px;
 
@@ -288,12 +290,13 @@ header h1 {
 .todo-app {
 
     background: var(--card-color);
+    border:1px solid var(--card-border);
 
     border-radius: 12px;
 
     padding: 26px;
 
-    box-shadow: 0 20px 45px rgba(0, 0, 0, .25);
+    box-shadow: 0 2px 8px rgba(15,23,42,.06);
 
     transition: .4s ease;
 
@@ -339,7 +342,7 @@ header h1 {
 
 #taskInput:focus {
 
-    box-shadow: 0 0 0 3px rgba(34, 139, 230, .25);
+    box-shadow:0 0 0 2px rgba(255,122,24,.25);
 
 }
 
@@ -369,7 +372,7 @@ header h1 {
 #category:focus,
 #dueDate:focus {
 
-    box-shadow: 0 0 0 3px rgba(255, 122, 24, .25);
+    box-shadow:0 0 0 2px rgba(255,122,24,.25);
 
 }
 
@@ -444,7 +447,7 @@ header h1 {
 
 #searchTask:focus {
 
-    box-shadow: 0 0 0 3px rgba(34, 139, 230, .25);
+    box-shadow:0 0 0 2px rgba(255,122,24,.25);
 
 }
 
@@ -587,7 +590,7 @@ header h1 {
 
     justify-content: space-between;
 
-    align-items: flex-start;
+    align-items:center;
 
     gap: 20px;
 
@@ -604,12 +607,27 @@ header h1 {
     position: relative;
 
     overflow: hidden;
+     cursor: grab;
 
     transition:
         transform .25s ease,
         box-shadow .25s ease,
         background .25s ease;
 
+}
+.task.completed{
+opacity:.75;
+}
+
+.task.completed .task-title{
+text-decoration:line-through;
+color:var(--subtitle-color);
+}
+
+.task.completed .category,
+.task.completed .priority,
+.task.completed .due-date{
+opacity:.7;
 }
 
 .task::before {
@@ -634,12 +652,9 @@ header h1 {
 
 }
 
-.task:hover {
-
-    transform: translateY(-3px);
-
-    box-shadow: 0 18px 35px rgba(0, 0, 0, .25);
-
+.task:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 18px rgba(15,23,42,.10);
 }
 
 .task:hover::before {
@@ -647,6 +662,7 @@ header h1 {
     opacity: 1;
 
 }
+
 /* ==========================================
    Task Content
 ========================================== */
@@ -663,17 +679,19 @@ header h1 {
 
 }
 
-.task-content span {
+.task-title{
 
-    font-size: 18px;
+    margin:0 0 6px;
 
-    font-weight: 600;
+    font-size:20px;
 
-    color: var(--text-color);
+    font-weight:600;
 
-    line-height: 1.4;
+    color:var(--text-color);
 
-    word-break: break-word;
+    line-height:1.4;
+
+    word-break:break-word;
 
 }
 
@@ -837,6 +855,7 @@ header h1 {
         box-shadow .2s ease;
 
 }
+
 .complete-btn {
 
     background: var(--success);
@@ -891,12 +910,10 @@ header h1 {
    Completed Task
 ========================================== */
 
-.completed .task-content span {
-
-    text-decoration: line-through;
-
-    opacity: .6;
-
+.completed .task-title{
+text-decoration:line-through;
+opacity:.6;
+color:var(--subtitle-color);
 }
 
 /* ==========================================
@@ -958,6 +975,7 @@ header h1 {
     --subtitle-color: #cbd5e1;
 
     --progress-bg: #475569;
+     --card-border: rgba(255,255,255,.08);
 
 }
 
@@ -1517,7 +1535,7 @@ header h1 {
 
     display: grid;
 
-   grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 
     gap: 14px;
 
@@ -1529,7 +1547,7 @@ header h1 {
 
     background: var(--card-color);
 
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
 
     border-radius: 18px;
 
@@ -1537,7 +1555,7 @@ header h1 {
 
     text-align: center;
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+    box-shadow: 0 2px 8px rgba(15,23,42,.06);
 
     transition:
         transform .3s ease,
@@ -1547,7 +1565,7 @@ header h1 {
 
 .stat-card:hover {
 
-    transform: translateY(-8px);
+    transform: translateY(-3px);
 
     box-shadow: 0 14px 35px rgba(0, 0, 0, .25);
 
@@ -1573,18 +1591,12 @@ header h1 {
 
 .stat-card p {
 
-    color: #c7d2e2;
+    color: var(--subtitle-color);
 
     font-size: 14px;
 
     letter-spacing: .5px;
 
-
-}
-
-.task {
-
-    cursor: grab;
 
 }
 
@@ -1676,125 +1688,142 @@ header h1 {
 
 }
 
-.chart-section{
-margin:20px 0;
-padding:20px;
-background:var(--card-color);
-border-radius:15px;
-display:flex;
-justify-content:center;
-align-items:center;
-height:320px;
+.chart-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--card-color);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
 }
 
-#taskChart{
-max-width:320px;
-max-height:320px;
+#taskChart {
+    max-width: 320px;
+    max-height: 320px;
 }
+
 .charts{
+
     display:grid;
-    grid-template-columns:repeat(2,420px);
+
+    grid-template-columns: repeat(2,1fr);
+
     gap:30px;
+
 }
-.chart-box{
-    background:var(--card-color);
-    padding:24px;
-    border-radius:10px;
-    height:300px;
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
+
+.chart-box {
+    background: var(--card-color);
+    padding: 20px;
+    border-radius: 12px;
+    border:1px solid var(--card-border);
+    height: 300px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
+
 .chart-box canvas{
-    width:250px !important;
-    height:250px !important;
+
+    max-width:220px !important;
+
+    max-height:220px !important;
+
 }
 
-@media(max-width:900px){
+@media(max-width:900px) {
 
-    .charts{
+    .charts {
 
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
 
-        justify-items:center;
+        justify-items: center;
 
     }
 
-    .chart-box{
+    .chart-box {
 
-        width:100%;
+        width: 100%;
 
-        max-width:500px;
+        max-width: 500px;
 
     }
 
 }
-.chart-box h3{
-margin-bottom:12px;
-width:100%;
-text-align:center;
-font-size:20px;
-font-weight:600;
-color: var(--text-color);
-}
-.weekly-chart{
 
-    margin:35px auto;
-
-    background:var(--card-color);
-
-    border-radius:10px;
-
-    padding:20px;
-
-    max-width:900px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-
+.chart-box h3 {
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color);
 }
 
-.weekly-chart h3{
+.weekly-chart {
 
-    text-align:center;
+    margin: 35px auto;
 
-    margin-bottom:20px;
+    background: var(--card-color);
+    border:1px solid var(--card-border);
 
-    color:var(--text-color);
+    border-radius: 10px;
+
+    padding: 20px;
+
+    max-width:940px;
+
+    box-shadow: 0 2px 8px rgba(15,23,42,.06);
 
 }
 
-#weeklyChart{
+.weekly-chart h3 {
 
-    height:280px !important;
+    text-align: center;
 
-}
-.section-title{
+    margin-bottom: 20px;
 
-font-size:28px;
-
-font-weight:700;
-
-color:#fff;
-
-margin:26px 0 14px;
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
+    color: var(--text-color);
 
 }
-.section-title::after{
-content:"";
-flex:1;
-height:2px;
-background:rgba(255,255,255,.08);
-border-radius:10px;
+
+#weeklyChart {
+
+    height: 280px !important;
+
 }
-.stat-card{
+
+.section-title {
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+   color: var(--text-color);
+
+    margin: 26px 0 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: rgba(148,163,184,.25);
+    border-radius: 10px;
+}
+
+.stat-card {
 
     transition:
         transform .25s,
@@ -1802,52 +1831,56 @@ border-radius:10px;
 
 }
 
-.stat-card:hover{
+.stat-card:hover {
 
-    transform:translateY(-6px);
+    transform: translateY(-6px);
 
-    box-shadow:0 8px 20px rgba(0,0,0,.18);
-
-}
-.analytics-wrapper{
-    display:flex;
-    justify-content:center;
-    margin-top:25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
 
 }
-.pin-btn{
-    background:none;
-    border:none;
-    cursor:pointer;
-    font-size:18px;
-    color:#cfd8dc;
-    transition:.3s;
+
+.analytics-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+
 }
 
-.pin-btn:hover{
-    color:#ff9800;
+.pin-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #cfd8dc;
+    transition: .3s;
 }
 
-.pin-btn.active-pin i{
-    color:#ff9800;
-    transform:rotate(45deg);
+.pin-btn:hover {
+    color: #ff9800;
 }
 
-.pin-btn i{
-    transition:.3s;
+.pin-btn.active-pin i {
+    color: #ff9800;
+    transform: rotate(45deg);
 }
 
-.task.pinned{
-    border-left:6px solid gold;
+.pin-btn i {
+    transition: .3s;
 }
-.pinned-label{
-    display:inline-block;
-    margin-bottom:8px;
-    padding:4px 10px;
-    background:#ff9800;
-    color:#fff;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.5px;
+
+.task.pinned {
+    border-left: 6px solid gold;
+}
+.task-title{
+margin:0 0 6px;
+font-size:20px;
+font-weight:600;
+color:var(--text-color);
+line-height:1.4;
+}
+
+.pinned-icon{
+color:#ff7a18;
+font-size:14px;
+margin-right:8px;
 }

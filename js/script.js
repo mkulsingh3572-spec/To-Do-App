@@ -8,34 +8,7 @@
    and productivity insights.
 =========================================================== */
 
-// ---------- Elements ----------
-
-const themeBtn = document.getElementById("themeBtn");
-
-let darkMode = localStorage.getItem("theme") === "dark";
-
-function applyTheme() {
-
-    if (darkMode) {
-        document.body.classList.add("dark-theme");
-        themeBtn.textContent = "☀️";
-    } else {
-        document.body.classList.remove("dark-theme");
-        themeBtn.textContent = "🌙";
-    }
-
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-}
-
-applyTheme();
-
-themeBtn.addEventListener("click", () => {
-
-    darkMode = !darkMode;
-
-    applyTheme();
-
-});
+// ---------- Elements ---------
 const taskInput = document.getElementById("taskInput");
 const priority = document.getElementById("priority");
 const category = document.getElementById("category");
@@ -548,13 +521,9 @@ function renderTasks(filter = "") {
         li.innerHTML = `
             <div class="task-content">
 
-    ${task.pinned
-                ? `<span class="pinned-label">
-              📌 PINNED
-           </span>`
-                : ""}
+    ${task.pinned ? `<i class="fa-solid fa-thumbtack pinned-icon"></i>` : ""}
 
-    <span>${task.text}</span>
+    <h4 class="task-title">${task.text}</h4>
                 <div class="task-info">
     <div class="category ${(task.category || "Personal").toLowerCase()}">
 

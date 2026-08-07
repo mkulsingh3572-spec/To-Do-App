@@ -13,7 +13,7 @@
     --subtitle-color: #6b7280;
     --progress-bg: #e5e7eb;
     --card-border: #e5e7eb;
-    --chart-text:#374151;
+    --chart-text: #1f2937;;
     --primary: #ff7a18;
     --primary-hover: #ff6200;
     --success: #27ae60;
@@ -1092,19 +1092,12 @@ header h1 {
 @media (max-width:480px) {
 
     body {
-
         padding: 25px 12px;
-
     }
-
     header {
-
-        margin-bottom: 35px;
-
-        padding-top: 75px;
-
-    }
-
+    margin-bottom:25px;
+    padding-top:70px;
+}
     header h1 {
 
         font-size: 40px;

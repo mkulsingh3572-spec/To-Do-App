@@ -381,13 +381,13 @@ function addTask() {
         showToast("✏️ Task updated!", "info");
         editIndex = -1;
     }
-    refreshUI(true);
     // Reset Form
     taskInput.value = "";
     priority.value = "Medium";
     category.value = "Personal";
     dueDate.value = "";
     taskInput.focus();
+    refreshUI(true);
 
 }
 

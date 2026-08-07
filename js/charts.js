@@ -3,7 +3,7 @@ const categoryCtx = document.getElementById("categoryChart");
 const weeklyCtx = document.getElementById("weeklyChart");
 
 function getChartTextColor() {
-    return getComputedStyle(document.documentElement)
+    return getComputedStyle(document.body)
         .getPropertyValue("--chart-text")
         .trim();
 }

@@ -56,52 +56,36 @@ let currentCategory = "all";
 function updateCounter() {
     taskCount.textContent = tasks.length;
 }
-// ==========================================
 // Progress Bar
-// ==========================================
-
 function updateProgress() {
-
     const totalTasks = tasks.length;
-
     const completedTasks = tasks.filter(task => task.completed).length;
-
     const percentage =
         totalTasks === 0
             ? 0
             : Math.round((completedTasks / totalTasks) * 100);
-
     progressFill.style.width = percentage + "%";
-
     if (percentage < 30) {
-
         // Red
         progressFill.style.background = "#e74c3c";
         progressText.style.color = "#e74c3c";
-
     }
     else if (percentage < 70) {
-
         // Orange
         progressFill.style.background = "#f39c12";
         progressText.style.color = "#f39c12";
-
     }
     else {
-
         // Green
         progressFill.style.background = "#27ae60";
         progressText.style.color = "#27ae60";
-
     }
-
     progressText.textContent =
         percentage === 100
             ? "🎉 100%"
             : percentage + "%";
     progressStatus.textContent =
         `${completedTasks} of ${totalTasks} Tasks Completed`;
-
 }
 function updateStatistics() {
     const total = tasks.length;
@@ -307,32 +291,37 @@ function renderTasks(filter = "") {
         });
 
         // Delete Task
-        li.querySelector(".delete-btn").addEventListener("click", () => {
+        // Delete Task
+li.querySelector(".delete-btn").addEventListener("click", () => {
 
-            deletedTask = tasks[actualIndex];
+    // Save deleted task for UNDO
+    deletedTask = tasks[actualIndex];
+    deletedIndex = actualIndex;
 
-            deletedIndex = actualIndex;
+    // If the deleted task was completed,
+    // decrease today's weekly completed count
+    if (deletedTask.completed) {
+        updateWeeklyStats(false);
+    }
 
-            tasks.splice(actualIndex, 1);
+    // Remove task
+    tasks.splice(actualIndex, 1);
 
-            undoBtn.style.display = "block";
+    undoBtn.style.display = "block";
 
-            showToast("🗑️ Task deleted", "error");
+    showToast("🗑️ Task deleted", "error");
 
-            refreshUI(true);
+    // Save and refresh everything
+    refreshUI(true);
 
-            clearTimeout(window.undoTimer);
+    clearTimeout(window.undoTimer);
 
-            window.undoTimer = setTimeout(() => {
-
-                deletedTask = null;
-
-                deletedIndex = null;
-
-                undoBtn.style.display = "none";
-
-            }, 5000);
-        });
+    window.undoTimer = setTimeout(() => {
+        deletedTask = null;
+        deletedIndex = null;
+        undoBtn.style.display = "none";
+    }, 5000);
+});
         li.addEventListener("dragstart", handleDragStart);
 
         li.addEventListener("dragover", handleDragOver);
@@ -546,6 +535,13 @@ undoBtn.addEventListener("click", () => {
 
     if (deletedTask === null) return;
 
+    // Restore weekly completed count
+    // if the deleted task was completed
+    if (deletedTask.completed) {
+        updateWeeklyStats(true);
+    }
+
+    // Restore task
     tasks.splice(deletedIndex, 0, deletedTask);
 
     refreshUI(true);
@@ -555,7 +551,6 @@ undoBtn.addEventListener("click", () => {
     undoBtn.style.display = "none";
 
     deletedTask = null;
-
     deletedIndex = null;
 
 });
@@ -611,12 +606,17 @@ function handleDragEnd() {
 
 // ==========================================
 // Initial Load
-// ==========================================
-
+//==========================================
 renderTasks();
-updateChart();
 updateStreak();
-
+// Fix initial Chart.js rendering on GitHub Pages
+window.addEventListener("load", () => {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            updateChart();
+        });
+    });
+});
 function updateWeeklyStats(isCompleted = true) {
     let weeklyStats =
         JSON.parse(localStorage.getItem("weeklyStats")) ||

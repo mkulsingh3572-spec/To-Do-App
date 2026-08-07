@@ -7,7 +7,7 @@ function refreshUI(save = false) {
     }
     renderTasks(searchTask.value);
     updateChart();
-    updateStats();
+    updateStatistics();
     updateProgress();
     updateStreak();
 }

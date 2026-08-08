@@ -292,30 +292,22 @@ function renderTasks(filter = "") {
 
         // Delete Task
         // Delete Task
+// NEW CODE:
+// DELETE THIS OLD CODE:
 li.querySelector(".delete-btn").addEventListener("click", () => {
-
-    // Save deleted task for UNDO
     deletedTask = tasks[actualIndex];
     deletedIndex = actualIndex;
 
-    // If the deleted task was completed,
-    // decrease today's weekly completed count
     if (deletedTask.completed) {
         updateWeeklyStats(false);
     }
 
-    // Remove task
     tasks.splice(actualIndex, 1);
-
     undoBtn.style.display = "block";
-
     showToast("🗑️ Task deleted", "error");
-
-    // Save and refresh everything
     refreshUI(true);
 
     clearTimeout(window.undoTimer);
-
     window.undoTimer = setTimeout(() => {
         deletedTask = null;
         deletedIndex = null;
@@ -607,35 +599,37 @@ function handleDragEnd() {
 // ==========================================
 // Initial Load
 //==========================================
-renderTasks();
-updateStreak();
-// Fix initial Chart.js rendering on GitHub Pages
-window.addEventListener("load", () => {
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            updateChart();
-        });
-    });
-});
+// NEW CODE:
 function updateWeeklyStats(isCompleted = true) {
-    let weeklyStats =
-        JSON.parse(localStorage.getItem("weeklyStats")) ||
-        [0, 0, 0, 0, 0, 0, 0];
+    let weeklyStats;
+    try {
+        weeklyStats = JSON.parse(localStorage.getItem("weeklyStats"));
+    } catch (e) {
+        weeklyStats = null;
+    }
 
-    const today = new Date().getDay();
-    const index = (today + 6) % 7;
-    console.log("Before:", weeklyStats[index]);
+    if (!Array.isArray(weeklyStats) || weeklyStats.length !== 7) {
+        weeklyStats = [0, 0, 0, 0, 0, 0, 0];
+    }
+
+    const todayDay = new Date().getDay(); // 0 = Sun, 1 = Mon ...
+    const index = (todayDay + 6) % 7;     // Convert to 0 = Mon, ..., 6 = Sun
+
     if (isCompleted) {
-        weeklyStats[index]++;
+        weeklyStats[index] += 1;
     } else {
         weeklyStats[index] = Math.max(0, weeklyStats[index] - 1);
     }
-    console.log("After:", weeklyStats[index]);
-    localStorage.setItem(
-        "weeklyStats",
-        JSON.stringify(weeklyStats)
-    );
+
+    localStorage.setItem("weeklyStats", JSON.stringify(weeklyStats));
 }
+
+// Single clean entry point when window styles & DOM are fully loaded
+window.addEventListener("load", () => {
+    renderTasks();
+    updateStreak();
+    initializeCharts();
+});
 function updateStreak() {
     const streak = localStorage.getItem("currentStreak") || 0;
     document.getElementById("currentStreak").textContent = streak;

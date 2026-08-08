@@ -23,4 +23,9 @@ themeBtn.addEventListener("click", () => {
 
     applyTheme();
 
+    // Redraw Chart.js charts with the new theme colors
+    if (typeof updateChart === "function") {
+        updateChart();
+    }
+
 });

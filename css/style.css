@@ -4,7 +4,6 @@
 :root {
 
     /* Light Theme */
-
     --bg-gradient: #f3f4f6;
     --card-color: #ffffff;
     --input-bg: #f3f4f6;
@@ -18,7 +17,6 @@
     --primary-hover: #ff6200;
     --success: #27ae60;
     --danger: #e74c3c;
-
 }
 
 /* ==========================
@@ -26,15 +24,10 @@
 ========================== */
 
 * {
-
     margin: 0;
-
     padding: 0;
-
     box-sizing: border-box;
-
     font-family: 'Poppins', sans-serif;
-
 }
 
 /* ==========================
@@ -42,158 +35,90 @@
 ========================== */
 
 body {
-
     min-height: 100vh;
-
     background: var(--bg-gradient);
-
     padding: 50px 20px;
-
     transition: .4s ease;
-
     overflow-x: hidden;
-
 }
-
 /* ==========================
    Main Container
 ========================== */
-
 .container {
     max-width: 1200px;
     margin: auto;
 }
-
 /* ==========================
    Responsive Elements
 ========================== */
-
 img,
 input,
 select,
 button {
-
     max-width: 100%;
-
 }
-
 /* ==========================================
    Header
 ========================================== */
-
 header {
-
     position: relative;
-
     max-width: 750px;
-
     margin: 0 auto 50px;
-
     text-align: center;
-
 }
-
 header h1 {
     color: var(--text-color);
-
     font-size: 52px;
-
     font-weight: 700;
-
     line-height: 1.15;
-
     margin-bottom: 12px;
-
 }
-
 .subtitle {
-
     max-width: 420px;
-
     margin: 0 auto;
-
     font-size: 22px;
-
     font-weight: 500;
-
     line-height: 1.5;
-
     color: var(--subtitle-color);
-
 }
-
 #themeBtn {
-
     position: absolute;
-
     top: 0;
-
     right: 0;
-
     width: 58px;
-
     height: 58px;
-
     border: none;
-
     border-radius: 50%;
-
     background: rgba(255, 255, 255, .08);
-
     font-size: 24px;
-
     cursor: pointer;
-
     transition: .3s;
-
 }
-
 #themeBtn:hover {
-
     transform: scale(1.08);
-
 }
-
 /* ==========================================
    Top Information
 ========================================== */
 
 .top-info {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     margin-bottom: 25px;
-
 }
-
 #currentDate {
-
     color: var(--text-color);
-
     font-size: 22px;
-
     font-weight: 500;
-
 }
-
 .task-counter {
-
     background: var(--primary);
-
     color: #ffffff;
-
     padding: 10px 22px;
-
     border-radius: 30px;
-
     font-size: 18px;
-
     font-weight: 600;
-
 }
 
 /* ==========================================
@@ -201,27 +126,16 @@ header h1 {
 ========================================== */
 
 .progress-section {
-
     margin-bottom: 30px;
-
 }
-
 .progress-header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     margin-bottom: 10px;
-
     color: var(--text-color);
-
     font-size: 22px;
-
     font-weight: 600;
-
 }
 
 #progressText {
@@ -1657,18 +1571,20 @@ header h1 {
     border: 1px solid var(--card-border);
     height: 300px;
     box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+
+    position: relative;
 }
 
 .chart-box canvas {
-
+    display: block;
+    width: 100% !important;
+    height: 220px !important;
     max-width: 220px !important;
-
-    max-height: 220px !important;
-
 }
 
 @media(max-width:900px) {
@@ -1728,9 +1644,9 @@ header h1 {
 }
 
 #weeklyChart {
-
+    display: block;
+    width: 100% !important;
     height: 280px !important;
-
 }
 
 .section-title {
